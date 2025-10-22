@@ -10,5 +10,6 @@ import { HomeView } from "@/views";
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/fonts.scss";
 @import "@/assets/scss/app.scss";
 </style>
