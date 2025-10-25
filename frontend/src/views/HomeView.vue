@@ -87,11 +87,7 @@
                 >
                   {{ task.title }}
                 </h5>
-                <ul v-if="task.tags.length" class="task__tags">
-                  <li v-for="(tag, index) in task.tags" :key="index">
-                    <span class="tag tag--blue">{{ tag }}</span>
-                  </li>
-                </ul>
+                <task-tags v-if="task.tags.length" :tags="task.tags" />
               </div>
             </div>
           </div>
@@ -110,6 +106,7 @@ import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
 import { normalizeTask } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
+import TaskTags from "@/modules/tasks/components/TaskTags.vue";
 
 const normalizedTasks = tasksJSON.map(normalizeTask);
 
@@ -535,53 +532,6 @@ const getImage = (image) =>
     width: 100%;
     margin-top: 9px;
     margin-bottom: 0;
-  }
-
-  &__tags {
-    @include clear-list;
-
-    display: flex;
-    flex-wrap: wrap;
-
-    width: 100%;
-    margin-top: 5px;
-
-    li {
-      margin-top: 4px;
-      margin-right: 4px;
-    }
-  }
-}
-
-.tag {
-  @include r-s10-h12;
-
-  padding: 4px 8px;
-
-  border-radius: 100px;
-
-  &--pink {
-    background-color: $pink-300;
-  }
-
-  &--orange {
-    background-color: $yellow-300;
-  }
-
-  &--green {
-    background-color: $green-100;
-  }
-
-  &--yellow {
-    background-color: $yellow-100;
-  }
-
-  &--blue {
-    background-color: $blue-300;
-  }
-
-  &--violet {
-    background-color: $pink-200;
   }
 }
 </style>
