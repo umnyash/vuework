@@ -25,3 +25,6 @@ export const normalizeTask = (task) => ({
   priority: PriorityStatus[task.statusId] ?? "",
   timeStatus: determineTimeStatus(task.dueDate),
 });
+
+export const getImage = (image) =>
+  new URL(`src/assets/img/${image}`, new URL(import.meta.url).origin).href;

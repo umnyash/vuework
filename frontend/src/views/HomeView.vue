@@ -104,7 +104,7 @@
 import columnsJSON from "@/mocks/columns.json";
 import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
-import { normalizeTask } from "@/common/helpers";
+import { normalizeTask, getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
 
@@ -123,9 +123,6 @@ const tasksGroupedByColumn = normalizedTasks.reduce((accumulator, task) => {
 
   return accumulator;
 }, {});
-
-const getImage = (image) =>
-  new URL(`src/assets/img/${image}`, new URL(import.meta.url).origin).href;
 </script>
 
 <style lang="scss" scoped>
