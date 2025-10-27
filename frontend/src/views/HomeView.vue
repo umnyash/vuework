@@ -63,14 +63,18 @@
 <script setup>
 import columnsJSON from "@/mocks/columns.json";
 import usersJSON from "@/mocks/users.json";
-import tasksJSON from "@/mocks/tasks.json";
-import { normalizeTask, getImage } from "@/common/helpers";
+import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
-const normalizedTasks = tasksJSON.map(normalizeTask);
+const { tasks } = defineProps({
+  tasks: {
+    type: Array,
+    required: true,
+  },
+});
 
-const tasksGroupedByColumn = normalizedTasks.reduce((accumulator, task) => {
+const tasksGroupedByColumn = tasks.reduce((accumulator, task) => {
   if (!task.columnId) {
     return accumulator;
   }
