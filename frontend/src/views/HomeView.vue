@@ -46,19 +46,12 @@
 
       <!-- Колонки и задачи -->
       <div v-if="columnsJSON.length" class="desk__columns">
-        <div v-for="column in columnsJSON" :key="column.id" class="column">
-          <h2 class="column__name">{{ column.title }}</h2>
-          <div class="column__target-area">
-            <!-- Задачи -->
-            <div
-              v-for="task in tasksGroupedByColumn[column.id]"
-              :key="task.id"
-              class="column__task"
-            >
-              <task-card :task="task" />
-            </div>
-          </div>
-        </div>
+        <desk-column
+          v-for="column in columnsJSON"
+          :key="column.id"
+          :column="column"
+          :tasks="tasksGroupedByColumn[column.id]"
+        />
       </div>
 
       <!-- Пустая доска -->
@@ -73,7 +66,7 @@ import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
 import { normalizeTask, getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
-import TaskCard from "@/modules/tasks/components/TaskCard.vue";
+import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
 const normalizedTasks = tasksJSON.map(normalizeTask);
 
@@ -311,75 +304,6 @@ const tasksGroupedByColumn = normalizedTasks.reduce((accumulator, task) => {
       border-color: $white-900;
       box-shadow: 0 0 0 1px $blue-600;
     }
-  }
-}
-
-.column {
-  $bl: &;
-
-  display: flex;
-  flex-direction: column;
-
-  padding-top: 15px;
-
-  border-left: 1px solid $blue-gray-200;
-
-  &__name {
-    @include m-s14-h21;
-
-    display: flex;
-    align-items: center;
-
-    margin: 0 8px;
-
-    color: $blue-gray-600;
-
-    &:hover {
-      #{$bl}__button {
-        opacity: 1;
-      }
-    }
-  }
-
-  &__target-area {
-    overflow-y: auto;
-    flex-grow: 1;
-
-    min-width: 224px;
-    max-width: 380px;
-    height: 1px;
-    padding-right: 8px;
-    padding-bottom: 30px;
-    padding-left: 8px;
-
-    @media (min-width: 1500px) {
-      min-width: 244px;
-    }
-  }
-
-  &__task {
-    display: block;
-
-    width: 100%;
-    margin-top: 16px;
-  }
-
-  &__button {
-    margin: 0;
-    padding: 0;
-
-    transition: opacity 0.3s;
-    transform: scale(0.8);
-
-    opacity: 0;
-    border: none;
-    outline: none;
-    background-color: transparent;
-  }
-
-  &__update {
-    margin-right: 5px;
-    margin-left: 5px;
   }
 }
 </style>
