@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <app-layout-header />
+    <app-layout-header @update-filter="$emit('updateFilter', $event)" />
     <main class="content">
       <slot />
     </main>
@@ -9,6 +9,8 @@
 
 <script setup>
 import AppLayoutHeader from "./AppLayoutHeader.vue";
+
+defineEmits(["updateFilter"]);
 </script>
 
 <style lang="scss" scoped>
