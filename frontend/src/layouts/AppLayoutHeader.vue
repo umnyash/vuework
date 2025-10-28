@@ -14,7 +14,18 @@
 
     <!-- Поиск -->
     <form class="header__search" action="#">
-      <input name="search" type="search" required placeholder="Поиск" />
+      <input
+        name="search"
+        type="search"
+        required
+        placeholder="Поиск"
+        @input="
+          $emit('updateFilter', {
+            key: TasksFilter.SEARCH_QUERY,
+            value: $event.target.value,
+          })
+        "
+      />
       <button type="submit">Найти</button>
     </form>
 
@@ -47,6 +58,12 @@
     </div>
   </header>
 </template>
+
+<script setup>
+import { TasksFilter } from "@/common/enums";
+
+defineEmits(["updateFilter"]);
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/ds-system/ds-system";
