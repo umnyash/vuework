@@ -14,7 +14,20 @@
                 :title="user.name"
                 class="user-filter__item"
               >
-                <a class="user-filter__button">
+                <a
+                  class="user-filter__button"
+                  :class="{
+                    'user-filter__button--current': filter.userIds.includes(
+                      user.id,
+                    ),
+                  }"
+                  @click.prevent="
+                    $emit('updateFilter', {
+                      key: TasksFilter.USER_IDS,
+                      value: user.id,
+                    })
+                  "
+                >
                   <img
                     :src="getImage(user.avatar)"
                     width="24"
@@ -29,14 +42,23 @@
             <!-- Список статусов -->
             <ul class="meta-filter">
               <li
-                v-for="{ value, label } in STATUSES"
+                v-for="{ value, label, filterKey } in STATUSES"
                 :key="value"
                 class="meta-filter__item"
               >
                 <a
                   class="meta-filter__status meta-filter__status--color"
-                  :class="`meta-filter__status--${value}`"
+                  :class="[
+                    `meta-filter__status--${value}`,
+                    {
+                      'meta-filter__status--current':
+                        filter[filterKey].includes(value),
+                    },
+                  ]"
                   :title="label"
+                  @click.prevent="
+                    $emit('updateFilter', { key: filterKey, value })
+                  "
                 />
               </li>
             </ul>
@@ -61,32 +83,42 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import columnsJSON from "@/mocks/columns.json";
 import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
+import { TasksFilter } from "@/common/enums";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
-const { tasks } = defineProps({
+const props = defineProps({
   tasks: {
     type: Array,
     required: true,
   },
+  filter: {
+    type: Object,
+    required: true,
+  },
 });
 
-const tasksGroupedByColumn = tasks.reduce((accumulator, task) => {
-  if (!task.columnId) {
+defineEmits(["updateFilter"]);
+
+const tasksGroupedByColumn = computed(() =>
+  props.tasks.reduce((accumulator, task) => {
+    if (!task.columnId) {
+      return accumulator;
+    }
+
+    if (!accumulator[task.columnId]) {
+      accumulator[task.columnId] = [];
+    }
+
+    accumulator[task.columnId].push(task);
+
     return accumulator;
-  }
-
-  if (!accumulator[task.columnId]) {
-    accumulator[task.columnId] = [];
-  }
-
-  accumulator[task.columnId].push(task);
-
-  return accumulator;
-}, {});
+  }, {}),
+);
 </script>
 
 <style lang="scss" scoped>

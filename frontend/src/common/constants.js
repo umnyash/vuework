@@ -1,23 +1,30 @@
+import { TasksFilter } from "./enums";
+
 export const STATUSES = [
   {
     label: "Важно, не срочно",
     value: "green",
+    filterKey: TasksFilter.PRIORITY_STATUSES,
   },
   {
     label: "Срочно, не важно",
     value: "orange",
+    filterKey: TasksFilter.PRIORITY_STATUSES,
   },
   {
     label: "Срочно, важно",
     value: "red",
+    filterKey: TasksFilter.PRIORITY_STATUSES,
   },
   {
     label: "Дедлайн",
     value: "time",
+    filterKey: TasksFilter.TIME_STATUSES,
   },
   {
     label: "Просрочено",
     value: "alert",
+    filterKey: TasksFilter.TIME_STATUSES,
   },
 ];
 
