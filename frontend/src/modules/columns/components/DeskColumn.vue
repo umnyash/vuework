@@ -3,7 +3,7 @@
     <h2 class="column__name">{{ column.title }}</h2>
     <div class="column__target-area">
       <!-- Задачи -->
-      <div v-for="task in tasks" :key="task.id" class="column__task">
+      <div v-for="task in sortedTasks" :key="task.id" class="column__task">
         <task-card :task="task" />
       </div>
     </div>
@@ -11,9 +11,10 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 
-defineProps({
+const props = defineProps({
   column: {
     type: Object,
     required: true,
@@ -23,6 +24,10 @@ defineProps({
     default: () => [],
   },
 });
+
+const sortedTasks = computed(() =>
+  props.tasks.toSorted((a, b) => a.sortOrder - b.sortOrder),
+);
 </script>
 
 <style lang="scss" scoped>
