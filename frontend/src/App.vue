@@ -4,6 +4,7 @@
       :tasks="filteredTasks"
       :filter="filter"
       @update-filter="updateFilter"
+      @update-tasks="updateTasks"
     />
   </app-layout>
 </template>
@@ -70,6 +71,13 @@ const updateFilter = ({ key, value }) => {
   } else {
     filter[key] = value.trim().toLowerCase();
   }
+};
+
+const updateTasks = (updatedTasks) => {
+  updatedTasks.forEach((updatedTask) => {
+    const taskIndex = tasks.findIndex((task) => updatedTask.id === task.id);
+    tasks.splice(taskIndex, 1, updatedTask);
+  });
 };
 </script>
 

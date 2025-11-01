@@ -73,6 +73,7 @@
           :key="column.id"
           :column="column"
           :tasks="tasksGroupedByColumn[column.id]"
+          @update-tasks="$emit('updateTasks', $event)"
         />
       </div>
 
@@ -102,7 +103,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["updateFilter"]);
+defineEmits(["updateFilter", "updateTasks"]);
 
 const tasksGroupedByColumn = computed(() =>
   props.tasks.reduce((accumulator, task) => {
