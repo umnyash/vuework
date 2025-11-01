@@ -1,17 +1,36 @@
 <template>
-  <div class="column">
+  <app-drop
+    class="column"
+    @drop="
+      dropTaskToColumn({
+        droppedTask: $event,
+        ...dropConfig,
+      })
+    "
+  >
     <h2 class="column__name">{{ column.title }}</h2>
     <div class="column__target-area">
       <!-- Задачи -->
       <div v-for="task in sortedTasks" :key="task.id" class="column__task">
-        <task-card :task="task" />
+        <task-card
+          :task="task"
+          @drop="
+            dropTaskToColumn({
+              hoveredTask: task,
+              droppedTask: $event,
+              ...dropConfig,
+            })
+          "
+        />
       </div>
     </div>
-  </div>
+  </app-drop>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import { dropTaskToColumn } from "@/common/helpers";
+import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 
 const props = defineProps({
@@ -25,9 +44,17 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["updateTasks"]);
+
 const sortedTasks = computed(() =>
   props.tasks.toSorted((a, b) => a.sortOrder - b.sortOrder),
 );
+
+const dropConfig = computed(() => ({
+  columnId: props.column.id,
+  columnTasks: sortedTasks.value,
+  emit,
+}));
 </script>
 
 <style lang="scss" scoped>

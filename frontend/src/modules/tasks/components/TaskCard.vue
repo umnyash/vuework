@@ -1,38 +1,44 @@
 <template>
-  <div class="task">
-    <div v-if="task.user" class="task__user">
-      <div class="task__avatar">
-        <img
-          :src="getImage(task.user.avatar)"
-          width="20"
-          height="20"
-          :alt="task.user.name"
-        />
+  <app-drop @drop="$emit('drop', $event)">
+    <app-drag :transfer-data="task">
+      <div class="task">
+        <div v-if="task.user" class="task__user">
+          <div class="task__avatar">
+            <img
+              :src="getImage(task.user.avatar)"
+              width="20"
+              height="20"
+              :alt="task.user.name"
+            />
+          </div>
+          {{ task.user.name }}
+        </div>
+
+        <div class="task__statuses">
+          <span
+            v-if="task.priority"
+            class="task__status task__status--color"
+            :class="`task__status--${task.priority}`"
+          />
+          <span
+            v-if="task.timeStatus"
+            class="task__status"
+            :class="`task__status--${task.timeStatus}`"
+          />
+        </div>
+
+        <h5 class="task__title" :class="{ 'task__title--first': !task.user }">
+          {{ task.title }}
+        </h5>
+        <task-tags v-if="task.tags.length" :tags="task.tags" />
       </div>
-      {{ task.user.name }}
-    </div>
-
-    <div class="task__statuses">
-      <span
-        v-if="task.priority"
-        class="task__status task__status--color"
-        :class="`task__status--${task.priority}`"
-      />
-      <span
-        v-if="task.timeStatus"
-        class="task__status"
-        :class="`task__status--${task.timeStatus}`"
-      />
-    </div>
-
-    <h5 class="task__title" :class="{ 'task__title--first': !task.user }">
-      {{ task.title }}
-    </h5>
-    <task-tags v-if="task.tags.length" :tags="task.tags" />
-  </div>
+    </app-drag>
+  </app-drop>
 </template>
 
 <script setup>
+import AppDrag from "@/common/components/AppDrag.vue";
+import AppDrop from "@/common/components/AppDrop.vue";
 import TaskTags from "./TaskTags.vue";
 import { getImage } from "@/common/helpers";
 
@@ -42,6 +48,8 @@ defineProps({
     required: true,
   },
 });
+
+defineEmits(["drop"]);
 </script>
 
 <style lang="scss" scoped>
