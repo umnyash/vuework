@@ -8,7 +8,25 @@
       })
     "
   >
-    <h2 class="column__name">{{ column.title }}</h2>
+    <h2 class="column__name">
+      <span v-if="!state.isTitleEditing">{{ state.title }}</span>
+
+      <input
+        v-else
+        ref="titleFieldElementRef"
+        v-model="state.title"
+        class="column__title-field"
+        name="column-title"
+        type="text"
+        @blur="finishTitleEditing"
+      />
+
+      <app-icon
+        v-if="!state.isTitleEditing"
+        class="column__button column__update icon--edit"
+        @click="startTitleEditing"
+      />
+    </h2>
     <div class="column__target-area">
       <!-- Задачи -->
       <div v-for="task in sortedTasks" :key="task.id" class="column__task">
@@ -28,9 +46,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick, reactive, ref } from "vue";
 import { dropTaskToColumn } from "@/common/helpers";
 import AppDrop from "@/common/components/AppDrop.vue";
+import AppIcon from "@/common/components/AppIcon.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 
 const props = defineProps({
@@ -44,7 +63,33 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["updateTasks"]);
+const emit = defineEmits(["update", "updateTasks"]);
+
+const titleFieldElementRef = ref(null);
+
+const state = reactive({
+  title: props.column.title,
+  isTitleEditing: false,
+});
+
+const startTitleEditing = async () => {
+  state.isTitleEditing = true;
+  await nextTick();
+  titleFieldElementRef.value.focus();
+};
+
+const finishTitleEditing = () => {
+  state.isTitleEditing = false;
+
+  if (props.column.title === state.title) {
+    return;
+  }
+
+  emit("update", {
+    ...props.column,
+    title: state.title,
+  });
+};
 
 const sortedTasks = computed(() =>
   props.tasks.toSorted((a, b) => a.sortOrder - b.sortOrder),
@@ -70,7 +115,8 @@ const dropConfig = computed(() => ({
 
   border-left: 1px solid $blue-gray-200;
 
-  &__name {
+  &__name,
+  &__title-field {
     @include m-s14-h21;
 
     display: flex;
@@ -85,6 +131,15 @@ const dropConfig = computed(() => ({
         opacity: 1;
       }
     }
+  }
+
+  &__title-field {
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    border-bottom: 1px solid $blue-gray-200;
+    outline: none;
   }
 
   &__target-area {

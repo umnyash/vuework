@@ -67,12 +67,13 @@
       </div>
 
       <!-- Колонки и задачи -->
-      <div v-if="columnsJSON.length" class="desk__columns">
+      <div v-if="columns.length" class="desk__columns">
         <desk-column
-          v-for="column in columnsJSON"
+          v-for="column in columns"
           :key="column.id"
           :column="column"
           :tasks="tasksGroupedByColumn[column.id]"
+          @update="updateColumn"
           @update-tasks="$emit('updateTasks', $event)"
         />
       </div>
@@ -84,7 +85,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 import columnsJSON from "@/mocks/columns.json";
 import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
@@ -104,6 +105,13 @@ const props = defineProps({
 });
 
 defineEmits(["updateFilter", "updateTasks"]);
+
+const { columns } = reactive({ columns: columnsJSON });
+
+const updateColumn = (column) => {
+  const columnIndex = columns.findIndex(({ id }) => id === column.id);
+  columns.splice(columnIndex, 1, column);
+};
 
 const tasksGroupedByColumn = computed(() =>
   props.tasks.reduce((accumulator, task) => {
