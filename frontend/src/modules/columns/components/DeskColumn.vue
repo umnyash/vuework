@@ -26,6 +26,12 @@
         class="column__button column__update icon--edit"
         @click="startTitleEditing"
       />
+
+      <app-icon
+        v-if="!state.isTitleEditing && !tasks.length"
+        class="icon--trash"
+        @click="$emit('delete', column.id)"
+      />
     </h2>
     <div class="column__target-area">
       <!-- Задачи -->
@@ -63,7 +69,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update", "updateTasks"]);
+const emit = defineEmits(["update", "delete", "updateTasks"]);
 
 const titleFieldElementRef = ref(null);
 

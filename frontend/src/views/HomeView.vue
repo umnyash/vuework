@@ -74,6 +74,7 @@
           :column="column"
           :tasks="tasksGroupedByColumn[column.id]"
           @update="updateColumn"
+          @delete="deleteColumn"
           @update-tasks="$emit('updateTasks', $event)"
         />
       </div>
@@ -111,6 +112,11 @@ const { columns } = reactive({ columns: columnsJSON });
 const updateColumn = (column) => {
   const columnIndex = columns.findIndex(({ id }) => id === column.id);
   columns.splice(columnIndex, 1, column);
+};
+
+const deleteColumn = (id) => {
+  const columnIndex = columns.findIndex((column) => column.id === id);
+  columns.splice(columnIndex, 1);
 };
 
 const tasksGroupedByColumn = computed(() =>
