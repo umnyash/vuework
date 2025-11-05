@@ -29,7 +29,7 @@
 
       <app-icon
         v-if="!state.isTitleEditing && !tasks.length"
-        class="icon--trash"
+        class="column__button column__delete icon--trash"
         @click="$emit('delete', column.id)"
       />
     </h2>
