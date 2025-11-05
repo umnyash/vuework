@@ -40,3 +40,6 @@ export const TAG_SEPARATOR = "#";
 
 export const MOVE = "move";
 export const DATA_TRANSFER_PAYLOAD = "payload";
+
+export const COLUMN_DEFAULT_TITLE = "Новый столбец";
+export const COLUMN_ID_PREFIX = "column_";

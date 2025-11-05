@@ -1,4 +1,10 @@
-import { DAY_IN_MILLISEC, TAG_SEPARATOR } from "./constants";
+import { uniqueId } from "lodash";
+import {
+  DAY_IN_MILLISEC,
+  TAG_SEPARATOR,
+  COLUMN_ID_PREFIX,
+  COLUMN_DEFAULT_TITLE,
+} from "./constants";
 import { PriorityStatus, TimeStatus } from "./enums";
 
 const parseTags = (tags) => tags.split(TAG_SEPARATOR).slice(1);
@@ -73,3 +79,8 @@ export const dropTaskToColumn = ({
 
   emit("updateTasks", tasksWithNewSortOrder);
 };
+
+export const createNewColumn = () => ({
+  id: uniqueId(COLUMN_ID_PREFIX),
+  title: COLUMN_DEFAULT_TITLE,
+});
