@@ -4,6 +4,9 @@
       <!-- Шапка доски -->
       <div class="desk__header">
         <h1 class="desk__title">Design Coffee Lab</h1>
+        <button class="desk__add" type="button" @click="addColumn">
+          Добавить столбец
+        </button>
         <div class="desk__filters">
           <div class="desk__user-filter">
             <!-- Список пользователей -->
@@ -89,7 +92,7 @@
 import { computed, reactive } from "vue";
 import columnsJSON from "@/mocks/columns.json";
 import usersJSON from "@/mocks/users.json";
-import { getImage } from "@/common/helpers";
+import { createNewColumn, getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
@@ -108,6 +111,10 @@ const props = defineProps({
 defineEmits(["updateFilter", "updateTasks"]);
 
 const { columns } = reactive({ columns: columnsJSON });
+
+const addColumn = () => {
+  columns.push(createNewColumn());
+};
 
 const updateColumn = (column) => {
   const columnIndex = columns.findIndex(({ id }) => id === column.id);
@@ -199,6 +206,14 @@ const tasksGroupedByColumn = computed(() =>
       content: "";
 
       background-image: url("@/assets/img/icon-add.svg");
+    }
+
+    &:hover {
+      color: $blue-600;
+    }
+
+    &:active {
+      color: $blue-300;
     }
   }
 
