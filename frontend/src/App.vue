@@ -1,5 +1,9 @@
 <template>
-  <app-layout @update-filter="updateFilter">
+  <app-layout
+    :tasks="filteredTasks"
+    @update-filter="updateFilter"
+    @update-tasks="updateTasks"
+  >
     <home-view
       :tasks="filteredTasks"
       :filter="filter"

@@ -1,7 +1,7 @@
 <template>
   <app-drop @drop="$emit('drop', $event)">
     <app-drag :transfer-data="task">
-      <div class="task">
+      <div class="task" :class="{ 'task--backlog': inBacklog }">
         <div v-if="task.user" class="task__user">
           <div class="task__avatar">
             <img
@@ -46,6 +46,9 @@ defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  inBacklog: {
+    type: Boolean,
   },
 });
 
