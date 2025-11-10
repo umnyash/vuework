@@ -1,6 +1,7 @@
 <template>
   <app-drop
     class="backlog"
+    :class="{ 'backlog--hide': state.isHidden }"
     @drop="
       dropTaskToColumn({
         droppedTask: $event,
@@ -8,7 +9,7 @@
       })
     "
   >
-    <button class="backlog__title">
+    <button class="backlog__title" @click="state.isHidden = !state.isHidden">
       <span>Бэклог</span>
     </button>
 
@@ -52,7 +53,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { reactive, computed } from "vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 import { dropTaskToColumn } from "@/common/helpers";
@@ -65,6 +66,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["updateTasks"]);
+
+const state = reactive({
+  isHidden: false,
+});
 
 const backlogTasks = computed(() =>
   props.tasks
@@ -131,6 +136,26 @@ const dropConfig = computed(() => ({
 
     span {
       @include m-s14-h21;
+    }
+  }
+
+  &--hide {
+    min-width: 50px;
+    max-width: 50px;
+
+    #{$bl}__title {
+      span {
+        display: none;
+      }
+
+      &::before {
+        transform: translateY(-53%);
+      }
+    }
+
+    #{$bl}__scroll {
+      visibility: hidden;
+      overflow: hidden;
     }
   }
 
