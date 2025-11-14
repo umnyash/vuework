@@ -1,91 +1,89 @@
 <template>
-  <main class="content">
-    <section class="desk">
-      <!-- Шапка доски -->
-      <div class="desk__header">
-        <h1 class="desk__title">Design Coffee Lab</h1>
-        <button class="desk__add" type="button" @click="addColumn">
-          Добавить столбец
-        </button>
-        <div class="desk__filters">
-          <div class="desk__user-filter">
-            <!-- Список пользователей -->
-            <ul class="user-filter">
-              <li
-                v-for="user in usersJSON"
-                :key="user.id"
-                :title="user.name"
-                class="user-filter__item"
+  <section class="desk">
+    <!-- Шапка доски -->
+    <div class="desk__header">
+      <h1 class="desk__title">Design Coffee Lab</h1>
+      <button class="desk__add" type="button" @click="addColumn">
+        Добавить столбец
+      </button>
+      <div class="desk__filters">
+        <div class="desk__user-filter">
+          <!-- Список пользователей -->
+          <ul class="user-filter">
+            <li
+              v-for="user in usersJSON"
+              :key="user.id"
+              :title="user.name"
+              class="user-filter__item"
+            >
+              <a
+                class="user-filter__button"
+                :class="{
+                  'user-filter__button--current': filter.userIds.includes(
+                    user.id,
+                  ),
+                }"
+                @click.prevent="
+                  $emit('updateFilter', {
+                    key: TasksFilter.USER_IDS,
+                    value: user.id,
+                  })
+                "
               >
-                <a
-                  class="user-filter__button"
-                  :class="{
-                    'user-filter__button--current': filter.userIds.includes(
-                      user.id,
-                    ),
-                  }"
-                  @click.prevent="
-                    $emit('updateFilter', {
-                      key: TasksFilter.USER_IDS,
-                      value: user.id,
-                    })
-                  "
-                >
-                  <img
-                    :src="getImage(user.avatar)"
-                    width="24"
-                    height="24"
-                    alt="Аватар юзера"
-                  />
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="desk__meta-filter">
-            <!-- Список статусов -->
-            <ul class="meta-filter">
-              <li
-                v-for="{ value, label, filterKey } in STATUSES"
-                :key="value"
-                class="meta-filter__item"
-              >
-                <a
-                  class="meta-filter__status meta-filter__status--color"
-                  :class="[
-                    `meta-filter__status--${value}`,
-                    {
-                      'meta-filter__status--current':
-                        filter[filterKey].includes(value),
-                    },
-                  ]"
-                  :title="label"
-                  @click.prevent="
-                    $emit('updateFilter', { key: filterKey, value })
-                  "
+                <img
+                  :src="getImage(user.avatar)"
+                  width="24"
+                  height="24"
+                  alt="Аватар юзера"
                 />
-              </li>
-            </ul>
-          </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="desk__meta-filter">
+          <!-- Список статусов -->
+          <ul class="meta-filter">
+            <li
+              v-for="{ value, label, filterKey } in STATUSES"
+              :key="value"
+              class="meta-filter__item"
+            >
+              <a
+                class="meta-filter__status meta-filter__status--color"
+                :class="[
+                  `meta-filter__status--${value}`,
+                  {
+                    'meta-filter__status--current':
+                      filter[filterKey].includes(value),
+                  },
+                ]"
+                :title="label"
+                @click.prevent="
+                  $emit('updateFilter', { key: filterKey, value })
+                "
+              />
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
 
-      <!-- Колонки и задачи -->
-      <div v-if="columns.length" class="desk__columns">
-        <desk-column
-          v-for="column in columns"
-          :key="column.id"
-          :column="column"
-          :tasks="tasksGroupedByColumn[column.id]"
-          @update="updateColumn"
-          @delete="deleteColumn"
-          @update-tasks="$emit('updateTasks', $event)"
-        />
-      </div>
+    <!-- Колонки и задачи -->
+    <div v-if="columns.length" class="desk__columns">
+      <desk-column
+        v-for="column in columns"
+        :key="column.id"
+        :column="column"
+        :tasks="tasksGroupedByColumn[column.id]"
+        @update="updateColumn"
+        @delete="deleteColumn"
+        @update-tasks="$emit('updateTasks', $event)"
+      />
+    </div>
 
-      <!-- Пустая доска -->
-      <p v-else class="desk__emptiness">Пока нет ни одной колонки</p>
-    </section>
-  </main>
+    <!-- Пустая доска -->
+    <p v-else class="desk__emptiness">Пока нет ни одной колонки</p>
+  </section>
 </template>
 
 <script setup>
