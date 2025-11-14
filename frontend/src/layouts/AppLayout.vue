@@ -1,39 +1,34 @@
 <template>
-  <div class="app-layout">
-    <app-layout-header @update-filter="$emit('updateFilter', $event)" />
-    <main class="content">
-      <app-layout-sidebar
-        :tasks="tasks"
-        @update-tasks="$emit('updateTasks', $event)"
-      />
-      <slot />
-    </main>
-  </div>
+  <component :is="layout">
+    <slot />
+  </component>
 </template>
 
 <script setup>
-import AppLayoutHeader from "./AppLayoutHeader.vue";
-import AppLayoutSidebar from "./AppLayoutSidebar.vue";
+import { shallowRef, watch } from "vue";
+import { useRoute } from "vue-router";
+import AppLayoutDefault from "./AppLayoutDefault.vue";
 
-defineProps({
-  tasks: {
-    type: Array,
-    required: true,
+const route = useRoute();
+const layout = shallowRef(null);
+
+watch(
+  () => route.meta,
+  async (meta) => {
+    try {
+      if (meta.layout) {
+        const component = await import(`./${meta.layout}.vue`);
+        layout.value = component?.default || AppLayoutDefault;
+      } else {
+        layout.value = AppLayoutDefault;
+      }
+    } catch (err) {
+      console.error(
+        "Динамический шаблон не найден. Установлен шаблон по-умолчанию.",
+        err,
+      );
+      layout.value = AppLayoutDefault;
+    }
   },
-});
-
-defineEmits(["updateFilter", "updateTasks"]);
+);
 </script>
-
-<style lang="scss" scoped>
-.app-layout {
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-}
-
-.content {
-  display: flex;
-  flex-grow: 1;
-}
-</style>
