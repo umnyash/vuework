@@ -4,7 +4,7 @@
     @update-filter="updateFilter"
     @update-tasks="updateTasks"
   >
-    <home-view
+    <router-view
       :tasks="filteredTasks"
       :filter="filter"
       @update-filter="updateFilter"
@@ -19,7 +19,6 @@ import tasksJSON from "@/mocks/tasks.json";
 import { TasksFilter } from "@/common/enums";
 import { normalizeTask } from "@/common/helpers";
 import { AppLayout } from "@/layouts";
-import { HomeView } from "@/views";
 
 const { tasks, filter } = reactive({
   tasks: tasksJSON.map(normalizeTask),
