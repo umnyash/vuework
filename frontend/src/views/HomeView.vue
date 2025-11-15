@@ -1,5 +1,7 @@
 <template>
   <section class="desk">
+    <router-view />
+
     <!-- Шапка доски -->
     <div class="desk__header">
       <h1 class="desk__title">Design Coffee Lab</h1>
