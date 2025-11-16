@@ -1,7 +1,11 @@
 <template>
   <app-drop @drop="$emit('drop', $event)">
     <app-drag :transfer-data="task">
-      <div class="task" :class="{ 'task--backlog': inBacklog }">
+      <div
+        class="task"
+        :class="{ 'task--backlog': inBacklog }"
+        @click="handleTaskClick"
+      >
         <div v-if="task.user" class="task__user">
           <div class="task__avatar">
             <img
@@ -37,12 +41,13 @@
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
 import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskTags from "./TaskTags.vue";
 import { getImage } from "@/common/helpers";
 
-defineProps({
+const props = defineProps({
   task: {
     type: Object,
     required: true,
@@ -53,6 +58,12 @@ defineProps({
 });
 
 defineEmits(["drop"]);
+
+const router = useRouter();
+
+const handleTaskClick = () => {
+  router.push({ path: `/${props.task.id}` });
+};
 </script>
 
 <style lang="scss" scoped>
