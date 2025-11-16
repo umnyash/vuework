@@ -1,7 +1,17 @@
 <template>
-  <div class="task-card">
+  <div
+    ref="cardElement"
+    class="task-card"
+    tabindex="0"
+    @click.self="handleCardClick"
+    @keydown.esc="handleCardEscKeydown"
+  >
     <section class="task-card__wrapper">
-      <button class="task-card__close" type="button"></button>
+      <button
+        class="task-card__close"
+        type="button"
+        @click="handleCloseButtonClick"
+      />
 
       <h1 class="task-card__name">
         <span>Утвердить критерии</span>
@@ -114,8 +124,33 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { getImage } from "@/common/helpers";
 import AppIcon from "@/common/components/AppIcon.vue";
+
+const router = useRouter();
+const cardElement = ref(null);
+
+const closeCard = () => {
+  router.push("/");
+};
+
+const handleCloseButtonClick = () => {
+  closeCard();
+};
+
+const handleCardClick = () => {
+  closeCard();
+};
+
+const handleCardEscKeydown = () => {
+  closeCard();
+};
+
+onMounted(() => {
+  cardElement.value.focus();
+});
 </script>
 
 <style lang="scss" scoped>
