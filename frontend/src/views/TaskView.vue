@@ -82,6 +82,11 @@
         </ul>
       </div>
 
+      <div class="task-card__tags">
+        <h2 class="task-card__title">Метки</h2>
+        <task-tags v-if="task.tags.length" :tags="task.tags" />
+      </div>
+
       <div class="task-card__comments">
         <h2 class="task-card__title">Комментарии</h2>
         <div class="comments">
@@ -131,6 +136,7 @@ import { useRouter, useRoute } from "vue-router";
 import { getImage, formatDate } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
 import AppIcon from "@/common/components/AppIcon.vue";
+import TaskTags from "@/modules/tasks/components/TaskTags.vue";
 
 const props = defineProps({
   tasks: {
@@ -851,6 +857,10 @@ onMounted(() => {
   }
 
   &__comments {
+    margin-top: 30px;
+  }
+
+  &__tags {
     margin-top: 30px;
   }
 }
