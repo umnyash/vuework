@@ -1,9 +1,16 @@
 import { uniqueId } from "lodash";
 import {
+  SEC,
+  MINUTE_IN_SEC,
+  HOUR_IN_SEC,
+  DAY_IN_SEC,
   DAY_IN_MILLISEC,
+  MONTH_IN_SEC,
+  YEAR_IN_SEC,
   TAG_SEPARATOR,
   COLUMN_ID_PREFIX,
   COLUMN_DEFAULT_TITLE,
+  SECOND_iN_SEC,
 } from "./constants";
 import { PriorityStatus, TimeStatus } from "./enums";
 
@@ -84,3 +91,45 @@ export const createNewColumn = () => ({
   id: uniqueId(COLUMN_ID_PREFIX),
   title: COLUMN_DEFAULT_TITLE,
 });
+
+const getDeclension = (count, one, few, many) => {
+  const countString = String(count);
+
+  switch (true) {
+    case countString.endsWith(1) && !countString.endsWith(11):
+      return one;
+    case !Number.isInteger(count):
+    case countString.endsWith(2) && !countString.endsWith(12):
+    case countString.endsWith(3) && !countString.endsWith(13):
+    case countString.endsWith(4) && !countString.endsWith(14):
+      return few;
+    default:
+      return many;
+  }
+};
+
+export const getTimeSince = (pastDateString) => {
+  const currentTime = Date.now();
+  const creationTime = Date.parse(pastDateString);
+  const timeDeltaInSeconds = (currentTime - creationTime) / SEC;
+
+  const timeUnits = [
+    [YEAR_IN_SEC, ["год", "года", "лет"]],
+    [MONTH_IN_SEC, ["месяц", "месяца", "месяцев"]],
+    [DAY_IN_SEC, ["день", "дня", "дней"]],
+    [HOUR_IN_SEC, ["час", "часа", "часов"]],
+    [MINUTE_IN_SEC, ["минуту", "минуты", "минут"]],
+    [SECOND_iN_SEC, ["секунду", "секунды", "секунд"]],
+  ];
+
+  for (const [unitInSec, declensions] of timeUnits) {
+    if (timeDeltaInSeconds >= unitInSec) {
+      const timeDeltaInUnit = Math.floor(timeDeltaInSeconds / unitInSec);
+      const declension = getDeclension(timeDeltaInUnit, ...declensions);
+
+      return `${timeDeltaInUnit} ${declension} назад`;
+    }
+  }
+
+  return "только что";
+};
