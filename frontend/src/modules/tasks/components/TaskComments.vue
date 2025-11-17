@@ -2,30 +2,22 @@
   <div class="task-card__comments">
     <h2 class="task-card__title">Комментарии</h2>
     <div class="comments">
-      <ul class="comments__list">
-        <li class="comments__item">
+      <ul v-if="comments.length" class="comments__list">
+        <li
+          v-for="comment of comments"
+          :key="comment.id"
+          class="comments__item"
+        >
           <div class="comments__user">
             <img
-              :src="getImage('user1.jpg')"
-              alt="Вика Некрасова"
+              :src="getImage(comment.user.avatar)"
+              :alt="comment.user.name"
               width="30"
               height="30"
             />
-            Вика Некрасова
+            {{ comment.user.name }}
           </div>
-          <p><strong>@petr</strong> Окей. Посмотрю</p>
-        </li>
-        <li class="comments__item">
-          <div class="comments__user">
-            <img
-              :src="getImage('user2.jpg')"
-              alt="Петр Хрустиков"
-              width="30"
-              height="30"
-            />
-            Петр Хрустиков
-          </div>
-          <p>Добавил несколько замечаний к критерию Б10</p>
+          <p>{{ comment.text }}</p>
         </li>
       </ul>
 
@@ -42,6 +34,13 @@
 
 <script setup>
 import { getImage } from "@/common/helpers";
+
+defineProps({
+  comments: {
+    type: Array,
+    default: () => [],
+  },
+});
 </script>
 
 <style lang="scss" scoped>
