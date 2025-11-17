@@ -133,3 +133,14 @@ export const getTimeSince = (pastDateString) => {
 
   return "только что";
 };
+
+export const formatDate = (dateString) =>
+  new Date(dateString)
+    .toLocaleString("ru", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    })
+    .replace(",", "");
