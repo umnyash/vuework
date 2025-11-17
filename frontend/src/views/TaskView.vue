@@ -60,72 +60,14 @@
         <p>Нет прикрепленных файлов</p>
       </div>
 
-      <div class="task-card__check-list">
-        <h2 class="task-card__title">
-          Чеклист <button type="button" class="task-card__plus"></button>
-        </h2>
-
-        <ul class="task-card__list">
-          <li class="task-card__item">
-            <div class="task-card__checkbox">
-              <label class="checkbox">
-                <input type="checkbox" name="remember" />
-                <span>Текст</span>
-              </label>
-            </div>
-
-            <div class="task-card__icons">
-              <app-icon class="icon--edit" />
-              <app-icon class="icon--trash" />
-            </div>
-          </li>
-        </ul>
-      </div>
+      <task-checklist />
 
       <div class="task-card__tags">
         <h2 class="task-card__title">Метки</h2>
         <task-tags v-if="task.tags.length" :tags="task.tags" />
       </div>
 
-      <div class="task-card__comments">
-        <h2 class="task-card__title">Комментарии</h2>
-        <div class="comments">
-          <ul class="comments__list">
-            <li class="comments__item">
-              <div class="comments__user">
-                <img
-                  :src="getImage('user1.jpg')"
-                  alt="Вика Некрасова"
-                  width="30"
-                  height="30"
-                />
-                Вика Некрасова
-              </div>
-              <p><strong>@petr</strong> Окей. Посмотрю</p>
-            </li>
-            <li class="comments__item">
-              <div class="comments__user">
-                <img
-                  :src="getImage('user2.jpg')"
-                  alt="Петр Хрустиков"
-                  width="30"
-                  height="30"
-                />
-                Петр Хрустиков
-              </div>
-              <p>Добавил несколько замечаний к критерию Б10</p>
-            </li>
-          </ul>
-
-          <form action="#" class="comments__form" method="post">
-            <textarea
-              name="comment_text"
-              placeholder="Введите текст комментария"
-            ></textarea>
-            <button type="submit">Написать комментарий</button>
-          </form>
-        </div>
-      </div>
+      <task-comments />
     </section>
   </div>
 </template>
@@ -136,7 +78,9 @@ import { useRouter, useRoute } from "vue-router";
 import { getImage, formatDate } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
 import AppIcon from "@/common/components/AppIcon.vue";
+import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
+import TaskComments from "@/modules/tasks/components/TaskComments.vue";
 
 const props = defineProps({
   tasks: {
@@ -175,208 +119,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
-
-.comments {
-  &__list {
-    @include clear-list;
-  }
-
-  &__item {
-    margin-top: 24px;
-
-    p {
-      @include r-s14-h21;
-    }
-
-    strong {
-      @include r-s14-h21;
-
-      color: $blue-600;
-    }
-  }
-
-  &__user {
-    @include r-s14-h16;
-
-    display: flex;
-    align-items: center;
-
-    width: 100%;
-    margin: 0;
-    padding: 0;
-
-    text-align: left;
-
-    background-color: transparent;
-
-    img {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-
-      border-radius: 50%;
-    }
-
-    span {
-      @include m-s14-h21;
-
-      display: block;
-
-      box-sizing: border-box;
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-      padding-top: 5px;
-
-      text-align: center;
-
-      color: $white-900;
-      border-radius: 50%;
-      background-color: $green-700;
-    }
-  }
-
-  &__form {
-    margin-top: 24px;
-
-    textarea {
-      @include r-s14-h21;
-
-      display: block;
-
-      box-sizing: border-box;
-      width: 100%;
-      height: 90px;
-      margin-top: 16px;
-      padding: 16px;
-
-      resize: none;
-      transition: border-color 0.3s;
-
-      color: $blue-gray-600;
-      border: 1px solid $blue-gray-50;
-      border-radius: 6px;
-      outline: none;
-
-      &:focus {
-        border-color: $blue-600;
-      }
-    }
-
-    button {
-      @include m-s14-h21;
-
-      display: block;
-
-      margin: 0;
-      margin-top: 15px;
-      margin-left: auto;
-      padding: 0;
-
-      cursor: pointer;
-      transition: opacity 0.3s;
-
-      opacity: 0.5;
-      color: $blue-gray-600;
-      border: none;
-      outline: none;
-      background-color: transparent;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-}
-
-.checkbox {
-  display: block;
-
-  [type="checkbox"] {
-    position: absolute;
-
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-
-    white-space: nowrap;
-
-    border: 0;
-
-    clip-path: inset(100%);
-
-    &:checked + span::after {
-      opacity: 1;
-    }
-  }
-
-  span {
-    @include r-s14-h16;
-
-    position: relative;
-
-    display: block;
-
-    padding-left: 35px;
-
-    color: $blue-gray-600;
-
-    &::before,
-    &::after {
-      @include p_center-v;
-
-      width: 24px;
-      height: 24px;
-
-      content: "";
-
-      border-radius: 4px;
-    }
-
-    &::after {
-      transition: 0.3s;
-
-      opacity: 0;
-      background-image: url("@/assets/img/icon-check.svg");
-      background-size: cover;
-    }
-
-    &::before {
-      box-sizing: border-box;
-
-      border: 1px solid $blue-gray-600;
-    }
-  }
-
-  [type="text"] {
-    @include r-s14-h21;
-
-    display: block;
-
-    width: 100%;
-    margin: 0;
-    margin-left: -5px;
-    padding: 5px 8px;
-
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    color: $gray-900;
-    border: none;
-    outline: none;
-    background-color: transparent;
-
-    &:focus {
-      cursor: text;
-
-      background-color: $blue-300;
-    }
-  }
-}
 
 .task-card {
   $bl: ".task-card";
@@ -661,7 +403,7 @@ onMounted(() => {
     }
   }
 
-  &__title {
+  :deep(#{$bl}__title) {
     @include m-s18-h21;
 
     margin: 0;
@@ -701,7 +443,7 @@ onMounted(() => {
     }
   }
 
-  &__plus {
+  :deep(#{$bl}__plus) {
     display: inline-block;
 
     width: 14px;
@@ -721,17 +463,17 @@ onMounted(() => {
     background-image: url("@/assets/img/icon-plus.svg");
     background-size: cover;
 
-    &--circle {
-      width: 30px;
-      height: 30px;
-      margin-top: 10px;
-
-      background-image: url("@/assets/img/icon-add.svg");
-    }
-
     &:hover {
       opacity: 1;
     }
+  }
+
+  :deep(#{$bl}__plus--circle) {
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;
+
+    background-image: url("@/assets/img/icon-add.svg");
   }
 
   &__links-item {
@@ -810,54 +552,12 @@ onMounted(() => {
     }
   }
 
-  &__list {
-    @include clear-list;
-
-    margin-top: 15px;
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-top: 10px;
-
-    &:hover {
-      #{$bl}__icons {
-        opacity: 1;
-      }
-    }
-  }
-
-  &__checkbox {
-    flex-grow: 1;
-
-    margin-right: 20px;
-  }
-
-  &__icons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    width: 50px;
-
-    transition: opacity 0.3s;
-
-    opacity: 0;
-  }
-
   &__buttons {
     display: flex;
     justify-content: space-between;
 
     width: 410px;
     margin-top: 50px;
-  }
-
-  &__comments {
-    margin-top: 30px;
   }
 
   &__tags {
