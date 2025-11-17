@@ -67,7 +67,7 @@
         <task-tags v-if="task.tags.length" :tags="task.tags" />
       </div>
 
-      <task-comments />
+      <task-comments :comments="task.comments" />
     </section>
   </div>
 </template>
