@@ -14,42 +14,44 @@
       />
 
       <h1 class="task-card__name">
-        <span>Утвердить критерии</span>
+        <span>{{ task.title }}</span>
         <app-icon class="icon--edit" />
       </h1>
 
-      <p class="task-card__date">#123456 создана 10 минут назад</p>
+      <p class="task-card__date">{{ useTaskDate(task) }}</p>
 
       <ul class="task-card__params">
-        <li>
+        <li v-if="task.user">
           Участник:
           <div class="task-card__participant">
             <button type="button" class="task-card__user">
-              <img :src="getImage('user1.jpg')" alt="Вика Некрасова" />
-              Вика Некрасова
+              <img :src="getImage(task.user.avatar)" :alt="task.user.name" />
+              {{ task.user.name }}
             </button>
           </div>
         </li>
-        <li>
+        <li v-if="task.dueDate">
           Срок:
           <button type="button" class="task-card__link task-card__link--text">
-            19.10.2020 19:00
+            {{ formatDate(task.dueDate) }}
           </button>
         </li>
       </ul>
 
       <div class="task-card__description">
         <h2 class="task-card__title">Описание</h2>
-        <p>Проверить и утвердить критерии качества</p>
+        <p v-if="task.description">{{ task.description }}</p>
       </div>
 
-      <div class="task-card__links">
+      <div v-if="task.url" class="task-card__links">
         <h2 class="task-card__title">
           Ссылки <button type="button" class="task-card__plus"></button>
         </h2>
 
         <div class="task-card__links-item task-card__links-item--border_none">
-          <a href="#">Ссылка на гугл-диск с маркетинговыми материалами</a>
+          <a :href="task.url" target="_blank">
+            {{ task.urlDescription || "Ссылка" }}
+          </a>
         </div>
       </div>
 
@@ -124,13 +126,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { getImage } from "@/common/helpers";
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { getImage, formatDate } from "@/common/helpers";
+import { useTaskDate } from "@/common/composables";
 import AppIcon from "@/common/components/AppIcon.vue";
 
+const props = defineProps({
+  tasks: {
+    type: Array,
+    required: true,
+  },
+});
+
 const router = useRouter();
+const route = useRoute();
 const cardElement = ref(null);
+const task = computed(() =>
+  props.tasks.find((task) => String(task.id) === route.params.id),
+);
 
 const closeCard = () => {
   router.push("/");

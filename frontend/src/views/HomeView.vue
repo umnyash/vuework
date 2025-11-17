@@ -1,6 +1,6 @@
 <template>
   <section class="desk">
-    <router-view />
+    <router-view :tasks="tasks" />
 
     <!-- Шапка доски -->
     <div class="desk__header">
