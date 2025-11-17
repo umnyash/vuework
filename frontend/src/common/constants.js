@@ -29,6 +29,7 @@ export const STATUSES = [
 ];
 
 export const SEC = 1000;
+export const SECOND_iN_SEC = 1;
 export const MINUTE_IN_SEC = 60;
 export const HOUR_IN_SEC = MINUTE_IN_SEC * 60;
 export const DAY_IN_SEC = HOUR_IN_SEC * 24;
