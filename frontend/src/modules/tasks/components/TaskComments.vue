@@ -22,10 +22,12 @@
       </ul>
 
       <form action="#" class="comments__form" method="post">
-        <textarea
+        <app-text-area
+          v-model="newComment"
           name="comment_text"
           placeholder="Введите текст комментария"
-        ></textarea>
+        />
+
         <button type="submit">Написать комментарий</button>
       </form>
     </div>
@@ -33,7 +35,11 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { getImage } from "@/common/helpers";
+import AppTextArea from "@/common/components/AppTextArea.vue";
+
+const newComment = ref("");
 
 defineProps({
   comments: {
@@ -112,30 +118,6 @@ defineProps({
 
   &__form {
     margin-top: 24px;
-
-    textarea {
-      @include r-s14-h21;
-
-      display: block;
-
-      box-sizing: border-box;
-      width: 100%;
-      height: 90px;
-      margin-top: 16px;
-      padding: 16px;
-
-      resize: none;
-      transition: border-color 0.3s;
-
-      color: $blue-gray-600;
-      border: 1px solid $blue-gray-50;
-      border-radius: 6px;
-      outline: none;
-
-      &:focus {
-        border-color: $blue-600;
-      }
-    }
 
     button {
       @include m-s14-h21;
