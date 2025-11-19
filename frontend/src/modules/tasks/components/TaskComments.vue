@@ -21,11 +21,17 @@
         </li>
       </ul>
 
-      <form action="#" class="comments__form" method="post">
+      <form
+        action="#"
+        class="comments__form"
+        method="post"
+        @submit.prevent="handleFormSubmit"
+      >
         <app-text-area
           v-model="newComment"
           name="comment_text"
           placeholder="Введите текст комментария"
+          :error-text="validations.newComment.error"
         />
 
         <button type="submit">Написать комментарий</button>
@@ -35,11 +41,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive, watch } from "vue";
 import { getImage } from "@/common/helpers";
-import AppTextArea from "@/common/components/AppTextArea.vue";
 
-const newComment = ref("");
+import {
+  ValidationRule,
+  validateFields,
+  clearValidationErrors,
+} from "@/common/validator";
+
+import AppTextArea from "@/common/components/AppTextArea.vue";
 
 defineProps({
   comments: {
@@ -47,6 +58,31 @@ defineProps({
     default: () => [],
   },
 });
+
+const newComment = ref("");
+
+const validations = reactive({
+  newComment: {
+    error: "",
+    rules: [ValidationRule.Required],
+  },
+});
+
+watch(newComment, () => {
+  if (validations.newComment.error) {
+    clearValidationErrors(validations);
+  }
+});
+
+const handleFormSubmit = () => {
+  const isValid = validateFields({ newComment }, validations);
+
+  if (!isValid) {
+    return;
+  }
+
+  newComment.value = "";
+};
 </script>
 
 <style lang="scss" scoped>
