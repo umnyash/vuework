@@ -42,6 +42,7 @@
 
 <script setup>
 import { ref, reactive, watch } from "vue";
+import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
 
 import {
@@ -52,13 +53,20 @@ import {
 
 import AppTextArea from "@/common/components/AppTextArea.vue";
 
-defineProps({
+const props = defineProps({
+  taskId: {
+    type: Number,
+    required: true,
+  },
   comments: {
     type: Array,
     default: () => [],
   },
 });
 
+const emit = defineEmits(["submitComment"]);
+
+const user = usersJSON[0];
 const newComment = ref("");
 
 const validations = reactive({
@@ -81,6 +89,18 @@ const handleFormSubmit = () => {
     return;
   }
 
+  const comment = {
+    taskId: props.taskId,
+    userId: user.id,
+    user: {
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+    },
+    text: newComment.value,
+  };
+
+  emit("submitComment", comment);
   newComment.value = "";
 };
 </script>

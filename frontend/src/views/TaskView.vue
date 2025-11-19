@@ -67,7 +67,11 @@
         <task-tags v-if="task.tags.length" :tags="task.tags" />
       </div>
 
-      <task-comments :comments="task.comments" />
+      <task-comments
+        :task-id="task.id"
+        :comments="task.comments"
+        @submit-comment="handleCommentSubmit"
+      />
     </section>
   </div>
 </template>
@@ -110,6 +114,14 @@ const handleCardClick = () => {
 
 const handleCardEscKeydown = () => {
   closeCard();
+};
+
+const handleCommentSubmit = (comment) => {
+  if (!task.value.comments) {
+    task.value.comments = [];
+  }
+
+  task.value.comments.push(comment);
 };
 
 onMounted(() => {
