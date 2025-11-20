@@ -10,21 +10,39 @@
             emit('change', { ...subtask, isDone: $event.target.checked })
           "
         />
-        <span>{{ subtask.text }}</span>
+        <span>
+          <input
+            v-if="state.isEditing"
+            ref="descriptionFieldElementRef"
+            v-model="state.description"
+            type="text"
+            name="checkbox_name"
+            :maxlength="SUBTASK_DESCRIPTION_MAX_LENGTH"
+            placeholder="Введите текст пункта"
+            @blur="finishDescriptionEditing"
+          />
+          <template v-else>{{ state.description }}</template>
+        </span>
       </label>
     </div>
 
     <div class="task-card__icons">
-      <app-icon class="icon--edit" />
+      <app-icon
+        class="icon--edit"
+        :style="editButtonStyleObject"
+        @click="startDescriptionEditing"
+      />
       <app-icon class="icon--trash" />
     </div>
   </li>
 </template>
 
 <script setup>
+import { reactive, ref, nextTick, computed } from "vue";
+import { SUBTASK_DESCRIPTION_MAX_LENGTH } from "@/common/constants";
 import AppIcon from "@/common/components/AppIcon.vue";
 
-defineProps({
+const props = defineProps({
   subtask: {
     type: Object,
     required: true,
@@ -32,6 +50,33 @@ defineProps({
 });
 
 const emit = defineEmits(["change"]);
+
+const descriptionFieldElementRef = ref(null);
+
+const state = reactive({
+  description: props.subtask.text,
+  isEditing: false,
+});
+
+const editButtonStyleObject = computed(() => ({
+  visibility: state.isEditing ? "hidden" : "visible",
+}));
+
+const startDescriptionEditing = async () => {
+  state.isEditing = true;
+  await nextTick();
+  descriptionFieldElementRef.value.focus();
+};
+
+const finishDescriptionEditing = async () => {
+  state.isEditing = false;
+
+  if (props.subtask.text === state.description) {
+    return;
+  }
+
+  emit("change", { ...props.subtask, text: state.description });
+};
 </script>
 
 <style lang="scss" scoped>
