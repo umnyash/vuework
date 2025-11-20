@@ -4,12 +4,12 @@
       Чеклист <button type="button" class="task-card__plus"></button>
     </h2>
 
-    <ul class="task-card__list">
-      <li class="task-card__item">
+    <ul v-if="subtasks.length" class="task-card__list">
+      <li v-for="subtask of subtasks" :key="subtask.id" class="task-card__item">
         <div class="task-card__checkbox">
           <label class="checkbox">
-            <input type="checkbox" name="remember" />
-            <span>Текст</span>
+            <input type="checkbox" name="remember" :checked="subtask.isDone" />
+            <span>{{ subtask.text }}</span>
           </label>
         </div>
 
@@ -24,6 +24,13 @@
 
 <script setup>
 import AppIcon from "@/common/components/AppIcon.vue";
+
+defineProps({
+  subtasks: {
+    type: Array,
+    default: () => [],
+  },
+});
 </script>
 
 <style lang="scss" scoped>
