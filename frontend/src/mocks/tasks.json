@@ -24,7 +24,29 @@
       "id": "7c7a4c48-3896-4353-b050-c8e50b967e8f",
       "name": "Василий Ложкин",
       "avatar": "user5.jpg"
-    }
+    },
+    "subtasks": [
+      {
+        "id": 1,
+        "text": "Подзадача 1",
+        "isDone": true
+      },
+      {
+        "id": 2,
+        "text": "Подзадача 2",
+        "isDone": true
+      },
+      {
+        "id": 3,
+        "text": "Подзадача 3",
+        "isDone": false
+      },
+      {
+        "id": 4,
+        "text": "Подзадача 4",
+        "isDone": false
+      }
+    ]
   },
   {
     "id": 3,
