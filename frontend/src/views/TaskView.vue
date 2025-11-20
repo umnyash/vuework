@@ -60,7 +60,10 @@
         <p>Нет прикрепленных файлов</p>
       </div>
 
-      <task-checklist :subtasks="task.subtasks" />
+      <task-checklist
+        :subtasks="task.subtasks"
+        @subtask-change="handleSubtaskChange"
+      />
 
       <div class="task-card__tags">
         <h2 class="task-card__title">Метки</h2>
@@ -114,6 +117,14 @@ const handleCardClick = () => {
 
 const handleCardEscKeydown = () => {
   closeCard();
+};
+
+const handleSubtaskChange = (subtask) => {
+  const subtaskIndex = task.value.subtasks.findIndex(
+    ({ id }) => id === subtask.id,
+  );
+
+  task.value.subtasks.splice(subtaskIndex, 1, subtask);
 };
 
 const handleCommentSubmit = (comment) => {

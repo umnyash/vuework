@@ -9,6 +9,7 @@
         v-for="subtask of subtasks"
         :key="subtask.id"
         :subtask="subtask"
+        @change="emit('subtaskChange', $event)"
       />
     </ul>
   </div>
@@ -23,6 +24,8 @@ defineProps({
     default: () => [],
   },
 });
+
+const emit = defineEmits(["subtaskChange"]);
 </script>
 
 <style lang="scss" scoped>

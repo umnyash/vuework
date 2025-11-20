@@ -2,7 +2,14 @@
   <li class="task-card__item">
     <div class="task-card__checkbox">
       <label class="checkbox">
-        <input type="checkbox" name="remember" :checked="subtask.isDone" />
+        <input
+          type="checkbox"
+          name="remember"
+          :checked="subtask.isDone"
+          @change="
+            emit('change', { ...subtask, isDone: $event.target.checked })
+          "
+        />
         <span>{{ subtask.text }}</span>
       </label>
     </div>
@@ -23,6 +30,8 @@ defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(["change"]);
 </script>
 
 <style lang="scss" scoped>
