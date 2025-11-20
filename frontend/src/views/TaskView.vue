@@ -60,7 +60,7 @@
         <p>Нет прикрепленных файлов</p>
       </div>
 
-      <task-checklist />
+      <task-checklist :subtasks="task.subtasks" />
 
       <div class="task-card__tags">
         <h2 class="task-card__title">Метки</h2>
