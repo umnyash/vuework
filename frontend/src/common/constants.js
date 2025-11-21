@@ -51,3 +51,4 @@ export const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
 
 export const SUBTASK_DESCRIPTION_MAX_LENGTH = 64;
+export const SUBTASK_DEFAULT_DESCRIPTION = "Новая подзадача";
