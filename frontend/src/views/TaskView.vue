@@ -64,6 +64,7 @@
         :subtasks="task.subtasks"
         @subtask-change="handleSubtaskChange"
         @add-subtask-button-click="handleAddSubtaskButtonClick"
+        @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
       />
 
       <div class="task-card__tags">
@@ -134,6 +135,14 @@ const handleAddSubtaskButtonClick = () => {
   }
 
   task.value.subtasks.push(createSubtask());
+};
+
+const handleRemoveSubtaskButtonClick = (subtaskId) => {
+  const subtaskIndex = task.value.subtasks.findIndex(
+    ({ id }) => id === subtaskId,
+  );
+
+  task.value.subtasks.splice(subtaskIndex, 1);
 };
 
 const handleCommentSubmit = (comment) => {
