@@ -1,7 +1,12 @@
 <template>
   <div class="task-card__check-list">
     <h2 class="task-card__title">
-      Чеклист <button type="button" class="task-card__plus"></button>
+      Чеклист
+      <button
+        type="button"
+        class="task-card__plus"
+        @click="emit('addSubtaskButtonClick')"
+      />
     </h2>
 
     <ul v-if="subtasks.length" class="task-card__list">
@@ -25,7 +30,7 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["subtaskChange"]);
+const emit = defineEmits(["subtaskChange", "addSubtaskButtonClick"]);
 </script>
 
 <style lang="scss" scoped>

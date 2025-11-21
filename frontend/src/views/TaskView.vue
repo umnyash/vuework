@@ -63,6 +63,7 @@
       <task-checklist
         :subtasks="task.subtasks"
         @subtask-change="handleSubtaskChange"
+        @add-subtask-button-click="handleAddSubtaskButtonClick"
       />
 
       <div class="task-card__tags">
@@ -82,7 +83,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { getImage, formatDate } from "@/common/helpers";
+import { getImage, formatDate, createSubtask } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
@@ -125,6 +126,14 @@ const handleSubtaskChange = (subtask) => {
   );
 
   task.value.subtasks.splice(subtaskIndex, 1, subtask);
+};
+
+const handleAddSubtaskButtonClick = () => {
+  if (!task.value.subtasks) {
+    task.value.subtasks = [];
+  }
+
+  task.value.subtasks.push(createSubtask());
 };
 
 const handleCommentSubmit = (comment) => {

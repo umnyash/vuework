@@ -11,6 +11,7 @@ import {
   COLUMN_ID_PREFIX,
   COLUMN_DEFAULT_TITLE,
   SECOND_iN_SEC,
+  SUBTASK_DEFAULT_DESCRIPTION,
 } from "./constants";
 import { PriorityStatus, TimeStatus } from "./enums";
 
@@ -144,3 +145,9 @@ export const formatDate = (dateString) =>
       minute: "numeric",
     })
     .replace(",", "");
+
+export const createSubtask = () => ({
+  id: crypto.randomUUID(),
+  text: SUBTASK_DEFAULT_DESCRIPTION,
+  isDone: false,
+});
