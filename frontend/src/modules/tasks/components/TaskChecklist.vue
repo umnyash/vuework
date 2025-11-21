@@ -15,6 +15,7 @@
         :key="subtask.id"
         :subtask="subtask"
         @change="emit('subtaskChange', $event)"
+        @remove-button-click="emit('removeSubtaskButtonClick', $event)"
       />
     </ul>
   </div>
@@ -30,7 +31,11 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["subtaskChange", "addSubtaskButtonClick"]);
+const emit = defineEmits([
+  "subtaskChange",
+  "addSubtaskButtonClick",
+  "removeSubtaskButtonClick",
+]);
 </script>
 
 <style lang="scss" scoped>

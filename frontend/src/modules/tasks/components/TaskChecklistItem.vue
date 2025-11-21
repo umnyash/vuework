@@ -32,7 +32,10 @@
         :style="editButtonStyleObject"
         @click="startDescriptionEditing"
       />
-      <app-icon class="icon--trash" />
+      <app-icon
+        class="icon--trash"
+        @click="emit('removeButtonClick', subtask.id)"
+      />
     </div>
   </li>
 </template>
@@ -49,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change", "removeButtonClick"]);
 
 const descriptionFieldElementRef = ref(null);
 
