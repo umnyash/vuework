@@ -119,14 +119,10 @@
       <task-checklist />
 
       <div class="task-card__buttons">
-        <button
-          type="button"
-          class="button button--border"
-          @click="handleCancelButtonClick"
-        >
+        <app-button class="button--border" @click="handleCancelButtonClick">
           Отменить
-        </button>
-        <button type="submit" class="button">Сохранить</button>
+        </app-button>
+        <app-button type="submit">Сохранить</app-button>
       </div>
     </section>
   </form>
@@ -138,6 +134,7 @@ import { useRouter } from "vue-router";
 import { getImage } from "@/common/helpers";
 import AppIcon from "@/common/components/AppIcon.vue";
 import AppTextArea from "@/common/components/AppTextArea.vue";
+import AppButton from "@/common/components/AppButton.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 
 const router = useRouter();
@@ -170,59 +167,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
-
-.button {
-  @include m-s14-h21;
-
-  display: block;
-
-  box-sizing: border-box;
-  width: 196px;
-  margin: 0;
-  padding: 17px 0;
-
-  cursor: pointer;
-  transition: 0.3s;
-  text-align: center;
-  text-transform: uppercase;
-
-  color: $white-900;
-  border: none;
-  border-radius: 6px;
-  outline: none;
-  background-color: $blue-600;
-  box-shadow: 0 4px 8px $shadow-500;
-
-  &:hover:not(:active) {
-    background-color: $blue-500;
-    box-shadow: 0 8px 16px $shadow-600;
-  }
-
-  &:active {
-    background-color: $blue-700;
-    box-shadow: 0 4px 8px $shadow-500;
-  }
-
-  &--border {
-    color: $blue-gray-600;
-    border: 1px solid $blue-gray-600;
-    background-color: $white-900;
-
-    &:hover:not(:active) {
-      background-color: $white-900;
-    }
-
-    &:active {
-      background-color: $white-700;
-    }
-  }
-
-  &--disabled {
-    pointer-events: none;
-
-    opacity: 0.5;
-  }
-}
 
 .task-card {
   $bl: ".task-card";
