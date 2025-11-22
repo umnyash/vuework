@@ -30,7 +30,9 @@
     </form>
 
     <!-- Кнопка создания новой задачи -->
-    <a class="header__create-task" href="#">Создать карточку</a>
+    <router-link class="header__create-task" to="/tasks/create">
+      Создать карточку
+    </router-link>
 
     <!-- Аватар пользователя -->
     <a class="header__user" href="#">
