@@ -1,7 +1,18 @@
 <template>
-  <form class="task-card" method="post">
+  <form
+    ref="formElement"
+    tabindex="0"
+    class="task-card"
+    method="post"
+    @click.self="handleFormClick"
+    @keydown.esc="handleFormEscKeydown"
+  >
     <section class="task-card__wrapper">
-      <button class="task-card__close" type="button"></button>
+      <button
+        class="task-card__close"
+        type="button"
+        @click="handleCloseButtonClick"
+      />
 
       <h1 class="task-card__name">
         <span>Название задачи</span>
@@ -108,7 +119,13 @@
       <task-checklist />
 
       <div class="task-card__buttons">
-        <button type="button" class="button button--border">Отменить</button>
+        <button
+          type="button"
+          class="button button--border"
+          @click="handleCancelButtonClick"
+        >
+          Отменить
+        </button>
         <button type="submit" class="button">Сохранить</button>
       </div>
     </section>
@@ -116,10 +133,39 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { getImage } from "@/common/helpers";
 import AppIcon from "@/common/components/AppIcon.vue";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
+
+const router = useRouter();
+const formElement = ref(null);
+
+const closeForm = () => {
+  router.push("/");
+};
+
+const handleCloseButtonClick = () => {
+  closeForm();
+};
+
+const handleFormClick = () => {
+  closeForm();
+};
+
+const handleFormEscKeydown = () => {
+  closeForm();
+};
+
+const handleCancelButtonClick = () => {
+  closeForm();
+};
+
+onMounted(() => {
+  formElement.value.focus();
+});
 </script>
 
 <style lang="scss" scoped>
