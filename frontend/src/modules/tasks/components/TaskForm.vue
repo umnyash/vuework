@@ -15,14 +15,13 @@
       />
 
       <h1 class="task-card__name">
-        <span>Название задачи</span>
         <input
           type="text"
           name="task_name"
           maxlength="37"
           value="Название задачи"
+          placeholder="Название задачи"
         />
-        <app-icon class="icon--edit" />
       </h1>
       <p class="task-card__date">#123456 создана 10 минут назад</p>
 
@@ -132,7 +131,6 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { getImage } from "@/common/helpers";
-import AppIcon from "@/common/components/AppIcon.vue";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
@@ -258,12 +256,6 @@ onMounted(() => {
     border-bottom: 1px solid transparent;
     border-radius: 0;
     outline: none;
-
-    &:focus:not(:disabled) {
-      cursor: text;
-
-      border-color: $blue-gray-200;
-    }
   }
 
   &__name {
@@ -279,7 +271,7 @@ onMounted(() => {
     }
 
     input {
-      display: none;
+      border-color: $blue-gray-200;
     }
   }
 
