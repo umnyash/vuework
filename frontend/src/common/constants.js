@@ -52,3 +52,4 @@ export const URL_REGEX =
 
 export const SUBTASK_DESCRIPTION_MAX_LENGTH = 64;
 export const SUBTASK_DEFAULT_DESCRIPTION = "Новая подзадача";
+export const TASK_DEFAULT_TITLE = "Название задачи";
