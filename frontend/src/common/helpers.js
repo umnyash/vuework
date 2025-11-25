@@ -12,6 +12,7 @@ import {
   COLUMN_DEFAULT_TITLE,
   SECOND_iN_SEC,
   SUBTASK_DEFAULT_DESCRIPTION,
+  TASK_DEFAULT_TITLE,
 } from "./constants";
 import { PriorityStatus, TimeStatus } from "./enums";
 
@@ -150,4 +151,18 @@ export const createSubtask = () => ({
   id: crypto.randomUUID(),
   text: SUBTASK_DEFAULT_DESCRIPTION,
   isDone: false,
+});
+
+export const createTask = () => ({
+  title: TASK_DEFAULT_TITLE,
+  description: "",
+  sortOrder: 0,
+  dueDate: null,
+  tags: "",
+  columnId: "",
+  statusId: "",
+  userId: null,
+  url: "",
+  urlDescription: "",
+  subtasks: [],
 });
