@@ -16,10 +16,10 @@
 
       <h1 class="task-card__name">
         <input
+          v-model="task.title"
           type="text"
           name="task_name"
           maxlength="37"
-          value="Название задачи"
           placeholder="Название задачи"
         />
       </h1>
@@ -130,13 +130,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getImage } from "@/common/helpers";
+import { getImage, createTask } from "@/common/helpers";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 
 const router = useRouter();
 const formElement = ref(null);
+
+const task = ref(createTask());
 
 const closeForm = () => {
   router.push("/");
