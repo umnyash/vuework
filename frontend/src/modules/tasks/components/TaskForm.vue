@@ -48,58 +48,7 @@
       </div>
 
       <ul class="task-card__params">
-        <li>
-          Участник:
-          <div class="task-card__participant">
-            <button type="button" class="task-card__link">
-              добавить пользователя
-            </button>
-
-            <div class="task-card__users">
-              <ul class="users-list">
-                <li>
-                  <button type="button" class="users-list__user">
-                    <img
-                      :src="getImage('user1.jpg')"
-                      alt="Вика Некрасова"
-                      width="30"
-                      height="30"
-                    />
-                    Вика Некрасова
-                  </button>
-                </li>
-                <li>
-                  <button type="button" class="users-list__user">
-                    <img
-                      :src="getImage('user2.jpg')"
-                      alt="Петр Хрустиков"
-                      width="30"
-                      height="30"
-                    />
-                    Петр Хрустиков
-                  </button>
-                </li>
-                <li>
-                  <button type="button" class="users-list__user">
-                    <img
-                      :src="getImage('user3.jpg')"
-                      alt="Михаил Валерьевич Тян-Шанский"
-                      width="30"
-                      height="30"
-                    />
-                    Михаил Валерьевич Тян-Шанский
-                  </button>
-                </li>
-                <li>
-                  <button type="button" class="users-list__user">
-                    <span>N</span>
-                    Наталья Железнова
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </li>
+        <task-user-selector />
         <li>
           Срок:
           <button type="button" class="task-card__link">установить срок</button>
@@ -154,9 +103,10 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { STATUSES } from "@/common/constants";
 import { PriorityStatus } from "@/common/enums";
-import { getImage, createTask } from "@/common/helpers";
+import { createTask } from "@/common/helpers";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
+import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 
 const router = useRouter();
@@ -386,30 +336,6 @@ onMounted(() => {
     li {
       margin-bottom: 24px;
     }
-  }
-
-  &__participant {
-    position: relative;
-
-    display: inline-block;
-
-    vertical-align: baseline;
-  }
-
-  &__users {
-    position: absolute;
-    z-index: 10;
-    top: -12px;
-    left: 0;
-
-    display: none;
-
-    box-sizing: border-box;
-    width: 210px;
-
-    border-radius: 6px;
-    background-color: $white-900;
-    box-shadow: 0 4px 8px $shadow-500;
   }
 
   &__user {
