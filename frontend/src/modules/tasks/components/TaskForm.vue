@@ -25,6 +25,28 @@
       </h1>
       <p class="task-card__date">#123456 создана 10 минут назад</p>
 
+      <div class="task-card__priority-status">
+        <h2 class="task-card__title">Приоритет</h2>
+        <ul class="meta-filter">
+          <li
+            v-for="{ value, label } of priorityStatuses"
+            :key="value"
+            class="meta-filter__item"
+          >
+            <a
+              class="meta-filter__status meta-filter__status--color"
+              :class="[
+                `meta-filter__status--${value}`,
+                value === PriorityStatus[task.statusId] &&
+                  'meta-filter__status--current',
+              ]"
+              :title="label"
+              @click.prevent="setPriorityStatus(value)"
+            />
+          </li>
+        </ul>
+      </div>
+
       <ul class="task-card__params">
         <li>
           Участник:
@@ -130,6 +152,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { STATUSES } from "@/common/constants";
+import { PriorityStatus } from "@/common/enums";
 import { getImage, createTask } from "@/common/helpers";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
@@ -137,8 +161,16 @@ import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 
 const router = useRouter();
 const formElement = ref(null);
-
 const task = ref(createTask());
+const priorityStatuses = STATUSES.slice(0, 3);
+
+const setPriorityStatus = (priorityStatus) => {
+  const statusId = Object.entries(PriorityStatus).find(
+    ([, status]) => priorityStatus === status,
+  )[0];
+
+  task.value.statusId = statusId;
+};
 
 const closeForm = () => {
   router.push("/");
@@ -167,6 +199,63 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
+
+.meta-filter {
+  @include clear-list;
+
+  display: flex;
+  align-items: center;
+
+  &__item {
+    margin-left: 16px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &__status {
+    display: block;
+
+    box-sizing: content-box;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer;
+    transition: 0.3s;
+
+    border: 1px solid $white-900;
+    border-radius: 50%;
+    outline: none;
+    background-color: transparent;
+
+    &:hover {
+      border-color: $blue-600;
+    }
+
+    &--color {
+      width: 8px;
+      height: 8px;
+    }
+
+    &--green {
+      background-color: $green-600;
+    }
+
+    &--orange {
+      background-color: $orange-600;
+    }
+
+    &--red {
+      background-color: $red-600;
+    }
+
+    &--current {
+      border-color: $white-900;
+      box-shadow: 0 0 0 1px $blue-600;
+    }
+  }
+}
 
 .task-card {
   $bl: ".task-card";
@@ -450,6 +539,14 @@ onMounted(() => {
     margin: 0;
 
     color: $gray-900;
+  }
+
+  &__priority-status {
+    margin-bottom: 40px;
+
+    ul {
+      margin-top: 16px;
+    }
   }
 
   &__description {
