@@ -2,49 +2,40 @@
   <li>
     Участник:
     <div class="task-card__participant">
-      <button type="button" class="task-card__link">
+      <button
+        v-if="modelValue"
+        class="task-card__user"
+        type="button"
+        @click="handlePerformerButtonClick"
+      >
+        <img :src="getImage(performer.avatar)" :alt="performer.name" />
+        {{ performer.name }}
+      </button>
+
+      <button
+        v-else
+        type="button"
+        class="task-card__link"
+        @click="handleAddPerformerButtonClick"
+      >
         добавить пользователя
       </button>
 
-      <div class="task-card__users">
+      <div v-if="isListOpen" class="task-card__users">
         <ul class="users-list">
-          <li>
-            <button type="button" class="users-list__user">
+          <li v-for="user in usersJSON" :key="user.id">
+            <button
+              type="button"
+              class="users-list__user"
+              @click="selectUser(user.id)"
+            >
               <img
-                :src="getImage('user1.jpg')"
-                alt="Вика Некрасова"
+                :src="getImage(user.avatar)"
+                :alt="user.name"
                 width="30"
                 height="30"
               />
-              Вика Некрасова
-            </button>
-          </li>
-          <li>
-            <button type="button" class="users-list__user">
-              <img
-                :src="getImage('user2.jpg')"
-                alt="Петр Хрустиков"
-                width="30"
-                height="30"
-              />
-              Петр Хрустиков
-            </button>
-          </li>
-          <li>
-            <button type="button" class="users-list__user">
-              <img
-                :src="getImage('user3.jpg')"
-                alt="Михаил Валерьевич Тян-Шанский"
-                width="30"
-                height="30"
-              />
-              Михаил Валерьевич Тян-Шанский
-            </button>
-          </li>
-          <li>
-            <button type="button" class="users-list__user">
-              <span>N</span>
-              Наталья Железнова
+              {{ user.name }}
             </button>
           </li>
         </ul>
@@ -54,11 +45,107 @@
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
+import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: null,
+  },
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+const performer = computed(() =>
+  usersJSON.find((user) => props.modelValue === user.id),
+);
+
+const isListOpen = ref(false);
+
+const openList = () => {
+  isListOpen.value = true;
+};
+
+const closeList = () => {
+  isListOpen.value = false;
+};
+
+const handleAddPerformerButtonClick = () => {
+  openList();
+};
+
+const handlePerformerButtonClick = () => {
+  openList();
+};
+
+const selectUser = (userId) => {
+  closeList();
+  emit("update:modelValue", userId);
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
+
+.users-list {
+  @include clear-list;
+
+  padding: 8px;
+
+  li {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__user {
+    @include r-s14-h16;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer;
+    text-align: left;
+
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+    img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+
+      border-radius: 50%;
+    }
+
+    span {
+      @include m-s14-h21;
+
+      display: block;
+
+      box-sizing: border-box;
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      padding-top: 5px;
+
+      text-align: center;
+
+      color: $white-900;
+      border-radius: 50%;
+      background-color: $green-700;
+    }
+  }
+}
 
 .task-card {
   &__participant {
@@ -127,14 +214,81 @@ import { getImage } from "@/common/helpers";
     top: -12px;
     left: 0;
 
-    display: none;
-
     box-sizing: border-box;
     width: 210px;
 
     border-radius: 6px;
     background-color: $white-900;
     box-shadow: 0 4px 8px $shadow-500;
+  }
+
+  &__user {
+    @include r-s14-h16;
+
+    display: inline-flex;
+    align-items: center;
+
+    width: 100%;
+    margin: 0;
+    margin-left: 5px;
+    padding: 0;
+
+    cursor: pointer;
+    transform: translateY(-2px);
+    text-align: left;
+    vertical-align: middle;
+
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+    &::after {
+      position: absolute;
+      top: 8px;
+      right: -20px;
+
+      width: 14px;
+      height: 14px;
+
+      content: "";
+      transition: opacity 0.3s;
+
+      opacity: 0;
+      background-image: url("@/assets/img/icon-pencil.svg");
+      background-size: cover;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+
+      border-radius: 50%;
+    }
+
+    span {
+      @include m-s14-h21;
+
+      display: block;
+
+      box-sizing: border-box;
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      padding-top: 5px;
+
+      text-align: center;
+
+      color: $white-900;
+      border-radius: 50%;
+      background-color: $green-700;
+    }
   }
 }
 </style>

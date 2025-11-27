@@ -48,7 +48,7 @@
       </div>
 
       <ul class="task-card__params">
-        <task-user-selector />
+        <task-user-selector v-model="task.userId" />
         <li>
           Срок:
           <button type="button" class="task-card__link">установить срок</button>
