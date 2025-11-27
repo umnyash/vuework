@@ -6,7 +6,7 @@
         v-if="modelValue"
         class="task-card__user"
         type="button"
-        @click="handlePerformerButtonClick"
+        @click.stop="handlePerformerButtonClick"
       >
         <img :src="getImage(performer.avatar)" :alt="performer.name" />
         {{ performer.name }}
@@ -16,12 +16,16 @@
         v-else
         type="button"
         class="task-card__link"
-        @click="handleAddPerformerButtonClick"
+        @click.stop="handleAddPerformerButtonClick"
       >
         добавить пользователя
       </button>
 
-      <div v-if="isListOpen" class="task-card__users">
+      <div
+        v-if="isListOpen"
+        v-outside-click="closeList"
+        class="task-card__users"
+      >
         <ul class="users-list">
           <li v-for="user in usersJSON" :key="user.id">
             <button
