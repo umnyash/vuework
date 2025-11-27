@@ -1,16 +1,19 @@
 <template>
-  <li>
+  <li class="task-card__participant-wrapper">
     Участник:
     <div class="task-card__participant">
-      <button
-        v-if="modelValue"
-        class="task-card__user"
-        type="button"
-        @click.stop="handlePerformerButtonClick"
-      >
-        <img :src="getImage(performer.avatar)" :alt="performer.name" />
-        {{ performer.name }}
-      </button>
+      <template v-if="modelValue">
+        <button
+          class="task-card__user"
+          type="button"
+          @click.stop="handlePerformerButtonClick"
+        >
+          <img :src="getImage(performer.avatar)" :alt="performer.name" />
+          {{ performer.name }}
+        </button>
+
+        <app-icon class="task-card__participant-remove-button icon--trash" />
+      </template>
 
       <button
         v-else
@@ -52,6 +55,7 @@
 import { ref, computed } from "vue";
 import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
+import AppIcon from "@/common/components/AppIcon.vue";
 
 const props = defineProps({
   modelValue: {
@@ -293,6 +297,21 @@ const selectUser = (userId) => {
       border-radius: 50%;
       background-color: $green-700;
     }
+  }
+
+  &__participant-remove-button {
+    position: absolute;
+    top: 4px;
+    right: -50px;
+    transform: scale(0.8);
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
+  }
+
+  &__participant-wrapper:hover &__participant-remove-button {
+    visibility: visible;
+    opacity: 1;
   }
 }
 </style>
