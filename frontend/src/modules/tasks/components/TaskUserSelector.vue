@@ -12,7 +12,10 @@
           {{ performer.name }}
         </button>
 
-        <app-icon class="task-card__participant-remove-button icon--trash" />
+        <app-icon
+          class="task-card__participant-remove-button icon--trash"
+          @click="handleRemovePerformerButtonClick"
+        />
       </template>
 
       <button
@@ -91,6 +94,10 @@ const handlePerformerButtonClick = () => {
 const selectUser = (userId) => {
   closeList();
   emit("update:modelValue", userId);
+};
+
+const handleRemovePerformerButtonClick = () => {
+  emit("update:modelValue", null);
 };
 </script>
 
