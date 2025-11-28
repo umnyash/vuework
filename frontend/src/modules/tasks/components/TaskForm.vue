@@ -49,10 +49,7 @@
 
       <ul class="task-card__params">
         <task-user-selector v-model="task.userId" />
-        <li>
-          Срок:
-          <button type="button" class="task-card__link">установить срок</button>
-        </li>
+        <task-due-date-selector v-model="task.dueDate" />
       </ul>
 
       <div class="task-card__description">
@@ -107,6 +104,7 @@ import { createTask } from "@/common/helpers";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
+import TaskDueDateSelector from "@/modules/tasks/components/TaskDueDateSelector.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 
 const router = useRouter();
@@ -404,58 +402,6 @@ onMounted(() => {
       color: $white-900;
       border-radius: 50%;
       background-color: $green-700;
-    }
-  }
-
-  &__link {
-    @include r-s16-h21;
-
-    position: relative;
-
-    margin: 0;
-    padding: 0;
-    padding-right: 23px;
-
-    cursor: pointer;
-    text-decoration: underline;
-
-    color: $blue-gray-600;
-    border: none;
-    outline: none;
-    background-color: transparent;
-
-    &::after {
-      position: absolute;
-      top: 2px;
-      right: 0;
-
-      width: 14px;
-      height: 14px;
-
-      content: "";
-      transition: opacity 0.3s;
-
-      opacity: 0;
-      background-image: url("@/assets/img/icon-pencil.svg");
-      background-size: cover;
-    }
-
-    &:hover {
-      text-decoration: none;
-
-      &::after {
-        opacity: 1;
-      }
-    }
-
-    &--text {
-      text-decoration: none;
-
-      color: $gray-900;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 
