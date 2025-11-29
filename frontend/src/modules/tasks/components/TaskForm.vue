@@ -89,7 +89,12 @@
         </label>
       </div>
 
-      <task-checklist />
+      <task-checklist
+        :subtasks="task.subtasks"
+        @subtask-change="handleSubtaskChange"
+        @add-subtask-button-click="handleAddSubtaskButtonClick"
+        @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
+      />
 
       <div class="task-card__buttons">
         <app-button class="button--border" @click="handleCancelButtonClick">
@@ -106,7 +111,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { STATUSES } from "@/common/constants";
 import { PriorityStatus } from "@/common/enums";
-import { createTask } from "@/common/helpers";
+import { createTask, createSubtask } from "@/common/helpers";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
@@ -144,6 +149,32 @@ const handleFormEscKeydown = () => {
 
 const handleCancelButtonClick = () => {
   closeForm();
+};
+
+const handleSubtaskChange = (subtask) => {
+  const subtaskIndex = task.value.subtasks.findIndex(
+    ({ id }) => id === subtask.id,
+  );
+
+  task.value.subtasks.splice(subtaskIndex, 1, subtask);
+};
+
+const handleAddSubtaskButtonClick = () => {
+  const newSubtask = createSubtask();
+
+  if (!task.value.subtasks) {
+    task.value.subtasks = [newSubtask];
+  } else {
+    task.value.subtasks.push(newSubtask);
+  }
+};
+
+const handleRemoveSubtaskButtonClick = (subtaskId) => {
+  const subtaskIndex = task.value.subtasks.findIndex(
+    ({ id }) => id === subtaskId,
+  );
+
+  task.value.subtasks.splice(subtaskIndex, 1);
 };
 
 onMounted(() => {
