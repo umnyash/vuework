@@ -55,7 +55,7 @@
       <div class="task-card__description">
         <h2 class="task-card__title">Описание</h2>
         <app-text-area
-          :model-value="''"
+          v-model="task.description"
           name="task_description"
           placeholder="Добавьте описание к задаче"
         />
@@ -67,8 +67,14 @@
         </h2>
 
         <div class="task-card__links-item">
-          <input type="text" name="task_link_url" placeholder="Введите url" />
           <input
+            v-model="task.url"
+            type="text"
+            name="task_link_url"
+            placeholder="Введите url"
+          />
+          <input
+            v-model="task.urlDescription"
             type="text"
             name="task_link_desc"
             placeholder="Добавьте описание к ссылке"
