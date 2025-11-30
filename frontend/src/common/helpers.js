@@ -14,7 +14,7 @@ import {
   SUBTASK_DEFAULT_DESCRIPTION,
   TASK_DEFAULT_TITLE,
 } from "./constants";
-import { PriorityStatus, TimeStatus } from "./enums";
+import { PriorityStatus, TimeStatus, KeyCode } from "./enums";
 
 export const parseTags = (tags) => tags.split(TAG_SEPARATOR).slice(1);
 
@@ -165,3 +165,5 @@ export const createTask = () => ({
   urlDescription: "",
   subtasks: [],
 });
+
+export const isEnterEvent = (evt) => evt.code === KeyCode.ENTER;
