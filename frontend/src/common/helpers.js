@@ -16,7 +16,7 @@ import {
 } from "./constants";
 import { PriorityStatus, TimeStatus } from "./enums";
 
-const parseTags = (tags) => tags.split(TAG_SEPARATOR).slice(1);
+export const parseTags = (tags) => tags.split(TAG_SEPARATOR).slice(1);
 
 const determineTimeStatus = (dueDate) => {
   if (!dueDate) {
@@ -36,7 +36,6 @@ const determineTimeStatus = (dueDate) => {
 
 export const normalizeTask = (task) => ({
   ...task,
-  tags: parseTags(task.tags),
   priority: PriorityStatus[task.statusId] ?? "",
   timeStatus: determineTimeStatus(task.dueDate),
 });
