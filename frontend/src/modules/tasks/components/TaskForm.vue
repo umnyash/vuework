@@ -96,6 +96,8 @@
         @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
       />
 
+      <task-tags-fieldset v-model="task.tags" />
+
       <div class="task-card__buttons">
         <app-button class="button--border" @click="handleCancelButtonClick">
           Отменить
@@ -117,6 +119,7 @@ import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
 import TaskDueDateSelector from "@/modules/tasks/components/TaskDueDateSelector.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
+import TaskTagsFieldset from "@/modules/tasks/components/TaskTagsFieldset.vue";
 
 const router = useRouter();
 const formElement = ref(null);
@@ -621,7 +624,8 @@ onMounted(() => {
     margin-top: 50px;
   }
 
-  &__comments {
+  &__comments,
+  &__tags {
     margin-top: 30px;
   }
 }
