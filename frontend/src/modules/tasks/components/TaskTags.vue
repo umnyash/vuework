@@ -1,18 +1,22 @@
 <template>
   <ul class="task__tags">
-    <li v-for="(tag, index) in tags" :key="index">
+    <li v-for="(tag, index) in parsedTags" :key="index">
       <span class="tag tag--blue">{{ tag }}</span>
     </li>
   </ul>
 </template>
 
 <script setup>
+import { parseTags } from "@/common/helpers";
+
 const { tags } = defineProps({
   tags: {
-    type: Array,
-    required: true,
+    type: String,
+    default: "",
   },
 });
+
+const parsedTags = parseTags(tags);
 </script>
 
 <style lang="scss" scoped>
