@@ -118,6 +118,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { cloneDeep } from "lodash";
 import { STATUSES } from "@/common/constants";
 import { PriorityStatus } from "@/common/enums";
 import { createTask, createSubtask } from "@/common/helpers";
@@ -133,11 +134,18 @@ import TaskDueDateSelector from "@/modules/tasks/components/TaskDueDateSelector.
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTagsFieldset from "@/modules/tasks/components/TaskTagsFieldset.vue";
 
+const props = defineProps({
+  task: {
+    type: Object,
+    default: null,
+  },
+});
+
 const emit = defineEmits(["submit"]);
 
 const router = useRouter();
 const formElement = ref(null);
-const task = ref(createTask());
+const task = ref(props.task ? cloneDeep(props.task) : createTask());
 const priorityStatuses = STATUSES.slice(0, 3);
 
 const validations = reactive({

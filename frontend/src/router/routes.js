@@ -17,6 +17,12 @@ export default [
         component: () => import("@/views/TaskCreateView.vue"),
         meta: { layout: "AppLayoutMain" },
       },
+      {
+        path: "/tasks/edit/:id",
+        name: "TaskEditView",
+        component: () => import("@/views/TaskEditView.vue"),
+        meta: { layout: "AppLayoutMain" },
+      },
     ],
   },
 ];
