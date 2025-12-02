@@ -9,12 +9,14 @@
       :filter="filter"
       @update-filter="updateFilter"
       @update-tasks="updateTasks"
+      @task-form-submit="handleTaskFormSubmit"
     />
   </app-layout>
 </template>
 
 <script setup>
 import { reactive, computed } from "vue";
+import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
 import { TasksFilter } from "@/common/enums";
 import { normalizeTask } from "@/common/helpers";
@@ -76,11 +78,26 @@ const updateFilter = ({ key, value }) => {
   }
 };
 
+const getUserById = (id) => usersJSON.find((user) => user.id === id);
+
 const updateTasks = (updatedTasks) => {
   updatedTasks.forEach((updatedTask) => {
     const taskIndex = tasks.findIndex((task) => updatedTask.id === task.id);
     tasks.splice(taskIndex, 1, updatedTask);
   });
+};
+
+const handleTaskFormSubmit = (task) => {
+  const normalizedTask = normalizeTask(task);
+  normalizedTask.id = tasks.length + 1;
+  normalizedTask.createdAt = new Date().toISOString();
+  normalizedTask.sortOrder = tasks.filter((task) => !task.columnId).length;
+
+  if (task.userId) {
+    normalizedTask.user = getUserById(task.userId);
+  }
+
+  tasks.push(normalizedTask);
 };
 </script>
 
