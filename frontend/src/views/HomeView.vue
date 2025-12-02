@@ -3,6 +3,7 @@
     <router-view
       :tasks="tasks"
       @task-form-submit="$emit('taskFormSubmit', $event)"
+      @task-remove="$emit('taskRemove', $event)"
     />
 
     <!-- Шапка доски -->
@@ -111,7 +112,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["updateFilter", "updateTasks", "taskFormSubmit"]);
+defineEmits(["updateFilter", "updateTasks", "taskFormSubmit", "taskRemove"]);
 
 const { columns } = reactive({ columns: columnsJSON });
 

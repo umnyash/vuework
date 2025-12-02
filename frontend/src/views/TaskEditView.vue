@@ -1,5 +1,9 @@
 <template>
-  <task-form :task="task" @submit="emit('taskFormSubmit', $event)" />
+  <task-form
+    :task="task"
+    @submit="emit('taskFormSubmit', $event)"
+    @task-remove="emit('taskRemove', $event)"
+  />
 </template>
 
 <script setup>
@@ -13,7 +17,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["taskFormSubmit"]);
+const emit = defineEmits(["taskFormSubmit", "taskRemove"]);
 
 const route = useRoute();
 const task = props.tasks.find((task) => String(task.id) === route.params.id);

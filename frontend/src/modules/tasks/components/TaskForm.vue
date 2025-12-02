@@ -113,6 +113,14 @@
         </app-button>
         <app-button type="submit">Сохранить</app-button>
       </div>
+      <button
+        v-if="task.id"
+        class="task-card__remove-button"
+        type="button"
+        @click="handleRemoveButtonClick"
+      >
+        Удалить задачу
+      </button>
     </section>
   </form>
 </template>
@@ -144,7 +152,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", "taskRemove"]);
 
 const router = useRouter();
 const formElement = ref(null);
@@ -193,6 +201,11 @@ const handleFormEscKeydown = () => {
 };
 
 const handleCancelButtonClick = () => {
+  closeForm();
+};
+
+const handleRemoveButtonClick = () => {
+  emit("taskRemove", task.value.id);
   closeForm();
 };
 
@@ -687,6 +700,28 @@ onMounted(() => {
     margin: 0 0 8px;
     color: $red-600;
     @include r-s10-h12;
+  }
+
+  &__remove-button {
+    @include m-s14-h21;
+
+    display: block;
+
+    margin: 50px 0 0 auto;
+    padding: 0;
+
+    cursor: pointer;
+    transition: opacity 0.3s;
+
+    opacity: 0.5;
+    color: $red-700;
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 </style>
