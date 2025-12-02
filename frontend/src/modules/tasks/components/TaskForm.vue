@@ -27,7 +27,9 @@
       <p v-if="validations.title.error" class="task-card__field-error">
         {{ validations.title.error }}
       </p>
-      <p class="task-card__date">#123456 создана 10 минут назад</p>
+      <p v-if="task.createdAt" class="task-card__date">
+        {{ useTaskDate(task) }}
+      </p>
 
       <div class="task-card__priority-status">
         <h2 class="task-card__title">Приоритет</h2>
@@ -122,6 +124,7 @@ import { cloneDeep } from "lodash";
 import { STATUSES } from "@/common/constants";
 import { PriorityStatus } from "@/common/enums";
 import { createTask, createSubtask } from "@/common/helpers";
+import { useTaskDate } from "@/common/composables";
 import {
   ValidationRule,
   validateFields,
@@ -504,6 +507,7 @@ onMounted(() => {
   }
 
   &__priority-status {
+    margin-top: 40px;
     margin-bottom: 40px;
 
     ul {
