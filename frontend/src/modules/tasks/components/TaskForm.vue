@@ -6,6 +6,7 @@
     method="post"
     @click.self="handleFormClick"
     @keydown.esc="handleFormEscKeydown"
+    @submit.prevent="handleFormSubmit"
   >
     <section class="task-card__wrapper">
       <button
@@ -23,6 +24,9 @@
           placeholder="Название задачи"
         />
       </h1>
+      <p v-if="validations.title.error" class="task-card__field-error">
+        {{ validations.title.error }}
+      </p>
       <p class="task-card__date">#123456 создана 10 минут назад</p>
 
       <div class="task-card__priority-status">
@@ -67,6 +71,9 @@
         </h2>
 
         <div class="task-card__links-item">
+          <p v-if="validations.url.error" class="task-card__field-error">
+            {{ validations.url.error }}
+          </p>
           <input
             v-model="task.url"
             type="text"
@@ -109,11 +116,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { STATUSES } from "@/common/constants";
 import { PriorityStatus } from "@/common/enums";
 import { createTask, createSubtask } from "@/common/helpers";
+import {
+  ValidationRule,
+  validateFields,
+  clearValidationErrors,
+} from "@/common/validator";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
@@ -125,6 +137,23 @@ const router = useRouter();
 const formElement = ref(null);
 const task = ref(createTask());
 const priorityStatuses = STATUSES.slice(0, 3);
+
+const validations = reactive({
+  title: {
+    error: "",
+    rules: [ValidationRule.Required],
+  },
+  url: {
+    error: "",
+    rules: [ValidationRule.Url],
+  },
+});
+
+watch(task.value, () => {
+  if (validations.title.error || validations.url.error) {
+    clearValidationErrors(validations);
+  }
+});
 
 const setPriorityStatus = (priorityStatus) => {
   const statusId = Object.entries(PriorityStatus).find(
@@ -178,6 +207,14 @@ const handleRemoveSubtaskButtonClick = (subtaskId) => {
   );
 
   task.value.subtasks.splice(subtaskIndex, 1);
+};
+
+const handleFormSubmit = () => {
+  const isValid = validateFields(task.value, validations);
+
+  if (!isValid) {
+    return;
+  }
 };
 
 onMounted(() => {
@@ -627,6 +664,12 @@ onMounted(() => {
   &__comments,
   &__tags {
     margin-top: 30px;
+  }
+
+  &__field-error {
+    margin: 0 0 8px;
+    color: $red-600;
+    @include r-s10-h12;
   }
 }
 </style>
