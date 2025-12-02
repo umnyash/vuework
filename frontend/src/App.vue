@@ -10,6 +10,7 @@
       @update-filter="updateFilter"
       @update-tasks="updateTasks"
       @task-form-submit="handleTaskFormSubmit"
+      @task-remove="handleTaskRemove"
     />
   </app-layout>
 </template>
@@ -102,6 +103,11 @@ const handleTaskFormSubmit = (task) => {
     normalizedTask.sortOrder = tasks.filter((task) => !task.columnId).length;
     tasks.push(normalizedTask);
   }
+};
+
+const handleTaskRemove = (id) => {
+  const taskIndex = tasks.findIndex((task) => task.id === id);
+  tasks.splice(taskIndex, 1);
 };
 </script>
 
