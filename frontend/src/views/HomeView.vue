@@ -1,6 +1,9 @@
 <template>
   <section class="desk">
-    <router-view :tasks="tasks" />
+    <router-view
+      :tasks="tasks"
+      @task-form-submit="$emit('taskFormSubmit', $event)"
+    />
 
     <!-- Шапка доски -->
     <div class="desk__header">
@@ -108,7 +111,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["updateFilter", "updateTasks"]);
+defineEmits(["updateFilter", "updateTasks", "taskFormSubmit"]);
 
 const { columns } = reactive({ columns: columnsJSON });
 

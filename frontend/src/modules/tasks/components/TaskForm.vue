@@ -133,6 +133,8 @@ import TaskDueDateSelector from "@/modules/tasks/components/TaskDueDateSelector.
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTagsFieldset from "@/modules/tasks/components/TaskTagsFieldset.vue";
 
+const emit = defineEmits(["submit"]);
+
 const router = useRouter();
 const formElement = ref(null);
 const task = ref(createTask());
@@ -215,6 +217,9 @@ const handleFormSubmit = () => {
   if (!isValid) {
     return;
   }
+
+  emit("submit", task.value);
+  closeForm();
 };
 
 onMounted(() => {
