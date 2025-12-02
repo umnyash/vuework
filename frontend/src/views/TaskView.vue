@@ -15,7 +15,7 @@
 
       <h1 class="task-card__name">
         <span>{{ task.title }}</span>
-        <app-icon class="icon--edit" />
+        <app-icon class="icon--edit" @click="handleEditButtonClick" />
       </h1>
 
       <p class="task-card__date">{{ useTaskDate(task) }}</p>
@@ -119,6 +119,13 @@ const handleCardClick = () => {
 
 const handleCardEscKeydown = () => {
   closeCard();
+};
+
+const handleEditButtonClick = () => {
+  router.push({
+    name: "TaskEditView",
+    params: { id: route.params.id },
+  });
 };
 
 const handleSubtaskChange = (subtask) => {
