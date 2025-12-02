@@ -89,15 +89,19 @@ const updateTasks = (updatedTasks) => {
 
 const handleTaskFormSubmit = (task) => {
   const normalizedTask = normalizeTask(task);
-  normalizedTask.id = tasks.length + 1;
-  normalizedTask.createdAt = new Date().toISOString();
-  normalizedTask.sortOrder = tasks.filter((task) => !task.columnId).length;
 
   if (task.userId) {
     normalizedTask.user = getUserById(task.userId);
   }
 
-  tasks.push(normalizedTask);
+  if (task.id) {
+    updateTasks([normalizedTask]);
+  } else {
+    normalizedTask.id = tasks.length + 1;
+    normalizedTask.createdAt = new Date().toISOString();
+    normalizedTask.sortOrder = tasks.filter((task) => !task.columnId).length;
+    tasks.push(normalizedTask);
+  }
 };
 </script>
 
