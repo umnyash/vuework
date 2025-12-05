@@ -21,7 +21,11 @@ import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
 import { TasksFilter } from "@/common/enums";
 import { normalizeTask } from "@/common/helpers";
+import { useColumnsStore } from "@/stores";
 import { AppLayout } from "@/layouts";
+
+const columnsStore = useColumnsStore();
+columnsStore.fetchColumns();
 
 const { tasks, filter } = reactive({
   tasks: tasksJSON.map(normalizeTask),

@@ -9,7 +9,7 @@
     <!-- Шапка доски -->
     <div class="desk__header">
       <h1 class="desk__title">Design Coffee Lab</h1>
-      <button class="desk__add" type="button" @click="addColumn">
+      <button class="desk__add" type="button" @click="columnsStore.addColumn">
         Добавить столбец
       </button>
       <div class="desk__filters">
@@ -75,14 +75,12 @@
     </div>
 
     <!-- Колонки и задачи -->
-    <div v-if="columns.length" class="desk__columns">
+    <div v-if="columnsStore.columns.length" class="desk__columns">
       <desk-column
-        v-for="column in columns"
+        v-for="column in columnsStore.columns"
         :key="column.id"
         :column="column"
         :tasks="tasksGroupedByColumn[column.id]"
-        @update="updateColumn"
-        @delete="deleteColumn"
         @update-tasks="$emit('updateTasks', $event)"
       />
     </div>
@@ -93,12 +91,12 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
-import columnsJSON from "@/mocks/columns.json";
+import { computed } from "vue";
 import usersJSON from "@/mocks/users.json";
-import { createNewColumn, getImage } from "@/common/helpers";
+import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
+import { useColumnsStore } from "@/stores";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
 const props = defineProps({
@@ -114,21 +112,7 @@ const props = defineProps({
 
 defineEmits(["updateFilter", "updateTasks", "taskFormSubmit", "taskRemove"]);
 
-const { columns } = reactive({ columns: columnsJSON });
-
-const addColumn = () => {
-  columns.push(createNewColumn());
-};
-
-const updateColumn = (column) => {
-  const columnIndex = columns.findIndex(({ id }) => id === column.id);
-  columns.splice(columnIndex, 1, column);
-};
-
-const deleteColumn = (id) => {
-  const columnIndex = columns.findIndex((column) => column.id === id);
-  columns.splice(columnIndex, 1);
-};
+const columnsStore = useColumnsStore();
 
 const tasksGroupedByColumn = computed(() =>
   props.tasks.reduce((accumulator, task) => {
