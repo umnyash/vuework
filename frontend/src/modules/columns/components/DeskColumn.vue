@@ -30,7 +30,7 @@
       <app-icon
         v-if="!state.isTitleEditing && !tasks.length"
         class="column__button column__delete icon--trash"
-        @click="$emit('delete', column.id)"
+        @click="columnsStore.deleteColumn(column.id)"
       />
     </h2>
     <div class="column__target-area">
@@ -54,6 +54,7 @@
 <script setup>
 import { computed, nextTick, reactive, ref } from "vue";
 import { dropTaskToColumn } from "@/common/helpers";
+import { useColumnsStore } from "@/columns";
 import AppDrop from "@/common/components/AppDrop.vue";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
@@ -69,8 +70,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update", "delete", "updateTasks"]);
+const emit = defineEmits(["updateTasks"]);
 
+const columnsStore = useColumnsStore();
 const titleFieldElementRef = ref(null);
 
 const state = reactive({
@@ -91,7 +93,7 @@ const finishTitleEditing = () => {
     return;
   }
 
-  emit("update", {
+  columnsStore.updateColumn({
     ...props.column,
     title: state.title,
   });
