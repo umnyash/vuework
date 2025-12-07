@@ -25,12 +25,12 @@
               <a
                 class="user-filter__button"
                 :class="{
-                  'user-filter__button--current': filter.userIds.includes(
-                    user.id,
-                  ),
+                  'user-filter__button--current': filterStore[
+                    TasksFilter.USER_IDS
+                  ].includes(user.id),
                 }"
                 @click.prevent="
-                  $emit('updateFilter', {
+                  filterStore.update({
                     key: TasksFilter.USER_IDS,
                     value: user.id,
                   })
@@ -60,13 +60,11 @@
                   `meta-filter__status--${value}`,
                   {
                     'meta-filter__status--current':
-                      filter[filterKey].includes(value),
+                      filterStore[filterKey].includes(value),
                   },
                 ]"
                 :title="label"
-                @click.prevent="
-                  $emit('updateFilter', { key: filterKey, value })
-                "
+                @click.prevent="filterStore.update({ key: filterKey, value })"
               />
             </li>
           </ul>
@@ -95,7 +93,7 @@ import { computed } from "vue";
 import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
-import { useUsersStore, useColumnsStore } from "@/stores";
+import { useUsersStore, useFilterStore, useColumnsStore } from "@/stores";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
 const props = defineProps({
@@ -103,15 +101,12 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  filter: {
-    type: Object,
-    required: true,
-  },
 });
 
-defineEmits(["updateFilter", "updateTasks", "taskFormSubmit", "taskRemove"]);
+defineEmits(["updateTasks", "taskFormSubmit", "taskRemove"]);
 
 const usersStore = useUsersStore();
+const filterStore = useFilterStore();
 const columnsStore = useColumnsStore();
 
 const tasksGroupedByColumn = computed(() =>

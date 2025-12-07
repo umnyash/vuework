@@ -20,7 +20,7 @@
         required
         placeholder="Поиск"
         @input="
-          $emit('updateFilter', {
+          filterStore.update({
             key: TasksFilter.SEARCH_QUERY,
             value: $event.target.value,
           })
@@ -63,8 +63,9 @@
 
 <script setup>
 import { TasksFilter } from "@/common/enums";
+import { useFilterStore } from "@/stores";
 
-defineEmits(["updateFilter"]);
+const filterStore = useFilterStore();
 </script>
 
 <style lang="scss" scoped>

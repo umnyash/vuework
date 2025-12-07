@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <app-layout-header @update-filter="$emit('updateFilter', $event)" />
+    <app-layout-header />
     <main class="content">
       <app-layout-sidebar
         :tasks="tasks"
@@ -22,7 +22,7 @@ defineProps({
   },
 });
 
-defineEmits(["updateFilter", "updateTasks"]);
+defineEmits(["updateTasks"]);
 </script>
 
 <style lang="scss" scoped>
