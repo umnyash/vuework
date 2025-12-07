@@ -86,23 +86,20 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { getImage, formatDate, createSubtask } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
+import { useTasksStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
 import TaskComments from "@/modules/tasks/components/TaskComments.vue";
 
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-});
-
 const router = useRouter();
 const route = useRoute();
 const cardElement = ref(null);
+
+const tasksStore = useTasksStore();
+
 const task = computed(() =>
-  props.tasks.find((task) => String(task.id) === route.params.id),
+  tasksStore.tasks.find((task) => String(task.id) === route.params.id),
 );
 
 const closeCard = () => {

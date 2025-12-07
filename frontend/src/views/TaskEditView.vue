@@ -1,24 +1,16 @@
 <template>
-  <task-form
-    :task="task"
-    @submit="emit('taskFormSubmit', $event)"
-    @task-remove="emit('taskRemove', $event)"
-  />
+  <task-form :task="task" />
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
+import { useTasksStore } from "@/stores";
 import TaskForm from "@/modules/tasks/components/TaskForm.vue";
 
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-});
-
-const emit = defineEmits(["taskFormSubmit", "taskRemove"]);
-
 const route = useRoute();
-const task = props.tasks.find((task) => String(task.id) === route.params.id);
+const tasksStore = useTasksStore();
+
+const task = tasksStore.tasks.find(
+  (task) => String(task.id) === route.params.id,
+);
 </script>

@@ -1,10 +1,6 @@
 <template>
   <section class="desk">
-    <router-view
-      :tasks="tasks"
-      @task-form-submit="$emit('taskFormSubmit', $event)"
-      @task-remove="$emit('taskRemove', $event)"
-    />
+    <router-view />
 
     <!-- Шапка доски -->
     <div class="desk__header">
@@ -78,8 +74,6 @@
         v-for="column in columnsStore.columns"
         :key="column.id"
         :column="column"
-        :tasks="tasksGroupedByColumn[column.id]"
-        @update-tasks="$emit('updateTasks', $event)"
       />
     </div>
 
@@ -89,41 +83,15 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
 import { useUsersStore, useFilterStore, useColumnsStore } from "@/stores";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-});
-
-defineEmits(["updateTasks", "taskFormSubmit", "taskRemove"]);
-
 const usersStore = useUsersStore();
 const filterStore = useFilterStore();
 const columnsStore = useColumnsStore();
-
-const tasksGroupedByColumn = computed(() =>
-  props.tasks.reduce((accumulator, task) => {
-    if (!task.columnId) {
-      return accumulator;
-    }
-
-    if (!accumulator[task.columnId]) {
-      accumulator[task.columnId] = [];
-    }
-
-    accumulator[task.columnId].push(task);
-
-    return accumulator;
-  }, {}),
-);
 </script>
 
 <style lang="scss" scoped>

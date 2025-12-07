@@ -138,6 +138,7 @@ import {
   validateFields,
   clearValidationErrors,
 } from "@/common/validator";
+import { useTasksStore } from "@/stores";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
@@ -152,12 +153,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["submit", "taskRemove"]);
-
 const router = useRouter();
 const formElement = ref(null);
 const task = ref(props.task ? cloneDeep(props.task) : createTask());
 const priorityStatuses = STATUSES.slice(0, 3);
+
+const tasksStore = useTasksStore();
 
 const validations = reactive({
   title: {
@@ -205,7 +206,7 @@ const handleCancelButtonClick = () => {
 };
 
 const handleRemoveButtonClick = () => {
-  emit("taskRemove", task.value.id);
+  tasksStore.deleteTask(task.value.id);
   closeForm();
 };
 
@@ -242,7 +243,12 @@ const handleFormSubmit = () => {
     return;
   }
 
-  emit("submit", task.value);
+  if (task.value.id) {
+    tasksStore.updateTasks([task.value]);
+  } else {
+    tasksStore.addTask(task.value);
+  }
+
   closeForm();
 };
 

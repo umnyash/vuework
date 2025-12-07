@@ -35,7 +35,7 @@
     </h2>
     <div class="column__target-area">
       <!-- Задачи -->
-      <div v-for="task in sortedTasks" :key="task.id" class="column__task">
+      <div v-for="task in tasks" :key="task.id" class="column__task">
         <task-card
           :task="task"
           @drop="
@@ -54,7 +54,7 @@
 <script setup>
 import { computed, nextTick, reactive, ref } from "vue";
 import { dropTaskToColumn } from "@/common/helpers";
-import { useColumnsStore } from "@/columns";
+import { useTasksStore, useColumnsStore } from "@/stores";
 import AppDrop from "@/common/components/AppDrop.vue";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
@@ -64,15 +64,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  tasks: {
-    type: Array,
-    default: () => [],
-  },
 });
 
-const emit = defineEmits(["updateTasks"]);
-
+const tasksStore = useTasksStore();
 const columnsStore = useColumnsStore();
+
 const titleFieldElementRef = ref(null);
 
 const state = reactive({
@@ -99,14 +95,16 @@ const finishTitleEditing = () => {
   });
 };
 
-const sortedTasks = computed(() =>
-  props.tasks.toSorted((a, b) => a.sortOrder - b.sortOrder),
+const tasks = computed(() =>
+  (tasksStore.taskGroupedByColumn[props.column.id] ?? []).toSorted(
+    (a, b) => a.sortOrder - b.sortOrder,
+  ),
 );
 
 const dropConfig = computed(() => ({
   columnId: props.column.id,
-  columnTasks: sortedTasks.value,
-  emit,
+  columnTasks: tasks.value,
+  tasksStore,
 }));
 </script>
 
