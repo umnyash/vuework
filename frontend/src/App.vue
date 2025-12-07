@@ -17,14 +17,15 @@
 
 <script setup>
 import { reactive, computed } from "vue";
-import usersJSON from "@/mocks/users.json";
 import tasksJSON from "@/mocks/tasks.json";
 import { TasksFilter } from "@/common/enums";
 import { normalizeTask } from "@/common/helpers";
-import { useColumnsStore } from "@/stores";
+import { useUsersStore, useColumnsStore } from "@/stores";
 import { AppLayout } from "@/layouts";
 
+const usersStore = useUsersStore();
 const columnsStore = useColumnsStore();
+usersStore.fetchUsers();
 columnsStore.fetchColumns();
 
 const { tasks, filter } = reactive({
@@ -83,8 +84,6 @@ const updateFilter = ({ key, value }) => {
   }
 };
 
-const getUserById = (id) => usersJSON.find((user) => user.id === id);
-
 const updateTasks = (updatedTasks) => {
   updatedTasks.forEach((updatedTask) => {
     const taskIndex = tasks.findIndex((task) => updatedTask.id === task.id);
@@ -96,7 +95,7 @@ const handleTaskFormSubmit = (task) => {
   const normalizedTask = normalizeTask(task);
 
   if (task.userId) {
-    normalizedTask.user = getUserById(task.userId);
+    normalizedTask.user = usersStore.getUserById(task.userId);
   }
 
   if (task.id) {

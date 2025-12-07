@@ -17,7 +17,7 @@
           <!-- Список пользователей -->
           <ul class="user-filter">
             <li
-              v-for="user in usersJSON"
+              v-for="user in usersStore.users"
               :key="user.id"
               :title="user.name"
               class="user-filter__item"
@@ -92,11 +92,10 @@
 
 <script setup>
 import { computed } from "vue";
-import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
-import { useColumnsStore } from "@/stores";
+import { useUsersStore, useColumnsStore } from "@/stores";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
 const props = defineProps({
@@ -112,6 +111,7 @@ const props = defineProps({
 
 defineEmits(["updateFilter", "updateTasks", "taskFormSubmit", "taskRemove"]);
 
+const usersStore = useUsersStore();
 const columnsStore = useColumnsStore();
 
 const tasksGroupedByColumn = computed(() =>

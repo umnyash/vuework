@@ -33,7 +33,7 @@
         class="task-card__users"
       >
         <ul class="users-list">
-          <li v-for="user in usersJSON" :key="user.id">
+          <li v-for="user in usersStore.users" :key="user.id">
             <button
               type="button"
               class="users-list__user"
@@ -56,8 +56,8 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
+import { useUsersStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 
 const props = defineProps({
@@ -69,10 +69,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const performer = computed(() =>
-  usersJSON.find((user) => props.modelValue === user.id),
-);
-
+const usersStore = useUsersStore();
+const performer = computed(() => usersStore.getUserById(props.modelValue));
 const isListOpen = ref(false);
 
 const openList = () => {

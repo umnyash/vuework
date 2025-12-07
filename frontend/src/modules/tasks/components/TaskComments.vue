@@ -42,8 +42,8 @@
 
 <script setup>
 import { ref, reactive, watch } from "vue";
-import usersJSON from "@/mocks/users.json";
 import { getImage } from "@/common/helpers";
+import { useUsersStore } from "@/stores";
 
 import {
   ValidationRule,
@@ -66,7 +66,8 @@ const props = defineProps({
 
 const emit = defineEmits(["submitComment"]);
 
-const user = usersJSON[0];
+const usersStore = useUsersStore();
+const user = usersStore.users[0];
 const newComment = ref("");
 
 const validations = reactive({
