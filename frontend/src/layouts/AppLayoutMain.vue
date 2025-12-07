@@ -2,10 +2,7 @@
   <div class="app-layout">
     <app-layout-header />
     <main class="content">
-      <app-layout-sidebar
-        :tasks="tasks"
-        @update-tasks="$emit('updateTasks', $event)"
-      />
+      <app-layout-sidebar />
       <slot />
     </main>
   </div>
@@ -14,15 +11,6 @@
 <script setup>
 import AppLayoutHeader from "./AppLayoutHeader.vue";
 import AppLayoutSidebar from "./AppLayoutSidebar.vue";
-
-defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-});
-
-defineEmits(["updateTasks"]);
 </script>
 
 <style lang="scss" scoped>

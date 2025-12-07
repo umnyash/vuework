@@ -27,13 +27,13 @@
           </div>
 
           <div class="backlog__counter">
-            {{ backlogTasks.length }}
+            {{ tasksStore.backlogTasks.length }}
           </div>
         </div>
 
         <div class="backlog__target-area">
           <task-card
-            v-for="task in backlogTasks"
+            v-for="task in tasksStore.backlogTasks"
             :key="task.id"
             class="backlog__task"
             :task="task"
@@ -54,33 +54,21 @@
 
 <script setup>
 import { reactive, computed } from "vue";
+import { useTasksStore } from "@/stores";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 import { dropTaskToColumn } from "@/common/helpers";
 
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-});
-
-const emit = defineEmits(["updateTasks"]);
+const tasksStore = useTasksStore();
 
 const state = reactive({
   isHidden: false,
 });
 
-const backlogTasks = computed(() =>
-  props.tasks
-    .filter(({ columnId }) => !columnId)
-    .sort((a, b) => a.sortOrder - b.sortOrder),
-);
-
 const dropConfig = computed(() => ({
   columnId: null,
-  columnTasks: backlogTasks.value,
-  emit,
+  columnTasks: tasksStore.backlogTasks,
+  tasksStore,
 }));
 </script>
 

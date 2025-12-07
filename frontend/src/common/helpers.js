@@ -48,7 +48,7 @@ export const dropTaskToColumn = ({
   columnTasks,
   hoveredTask,
   droppedTask,
-  emit,
+  tasksStore,
 }) => {
   if (droppedTask.id === hoveredTask?.id) {
     return;
@@ -85,7 +85,7 @@ export const dropTaskToColumn = ({
     }
   });
 
-  emit("updateTasks", tasksWithNewSortOrder);
+  tasksStore.updateTasks(tasksWithNewSortOrder);
 };
 
 export const createNewColumn = () => ({
