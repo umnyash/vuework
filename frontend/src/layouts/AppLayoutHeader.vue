@@ -2,14 +2,14 @@
   <header class="header">
     <!-- Логотип -->
     <div class="header__logo">
-      <a class="logo" href="#">
+      <router-link class="logo" to="/">
         <img
           src="@/assets/img/logo.svg"
           width="147"
           height="23"
           alt="VueWork logo"
         />
-      </a>
+      </router-link>
     </div>
 
     <!-- Поиск -->
@@ -34,42 +34,95 @@
       Создать карточку
     </router-link>
 
-    <!-- Аватар пользователя -->
-    <a class="header__user" href="#">
-      <img
-        src="@/assets/img/admin.jpg"
-        width="40"
-        height="40"
-        alt="Администратор"
-      />
-    </a>
-
-    <!-- Меню пользователя -->
-    <div class="header__menu">
-      <div class="user-menu">
+    <template v-if="authStore.user">
+      <!-- Аватар пользователя -->
+      <a class="header__user" href="#" @click.prevent.stop="openUserMenu">
         <img
-          src="@/assets/img/admin.jpg"
-          width="56"
-          height="56"
-          alt="Администратор"
+          :src="getPublicImage(authStore.user?.avatar)"
+          width="40"
+          height="40"
+          :alt="authStore.user.name"
         />
-        <span>Администратор</span>
-        <a class="user-menu__link" href="#">Мой аккаунт</a>
-        <a class="user-menu__link" href="#">Выйти</a>
+      </a>
+
+      <!-- Меню пользователя -->
+      <div
+        v-if="isUserMenuOpen"
+        v-outside-click="closeUserMenu"
+        class="header__menu"
+      >
+        <div class="user-menu">
+          <img
+            :src="getPublicImage(authStore.user?.avatar)"
+            width="56"
+            height="56"
+            :alt="authStore.user.name"
+          />
+          <span>{{ authStore.user.name }}</span>
+          <a class="user-menu__link" href="#" @click.prevent="authStore.logout">
+            Выйти
+          </a>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <router-link v-else class="header__login" to="/login">Войти</router-link>
   </header>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { TasksFilter } from "@/common/enums";
-import { useFilterStore } from "@/stores";
+import { getPublicImage } from "@/common/helpers";
+import { useAuthStore, useFilterStore } from "@/stores";
 
+const authStore = useAuthStore();
 const filterStore = useFilterStore();
+const isUserMenuOpen = ref(false);
+
+const openUserMenu = () => {
+  isUserMenuOpen.value = true;
+};
+
+const closeUserMenu = () => {
+  isUserMenuOpen.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/ds-system/ds-system";
+
+.user-menu {
+  width: 240px;
+  padding-top: 32px;
+  padding-bottom: 24px;
+  text-align: center;
+  border-radius: 6px 0 0 6px;
+  background-color: $white-900;
+  box-shadow: 0 4px 8px $shadow-500;
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+
+  span {
+    @include m-s18-h21;
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    color: $black-900;
+    border-bottom: 1px solid $blue-gray-50;
+  }
+
+  &__link {
+    @include m-s14-h21;
+    display: block;
+    margin-top: 16px;
+    color: $blue-gray-600;
+  }
+}
 
 .header {
   position: relative;
@@ -194,8 +247,6 @@ const filterStore = useFilterStore();
     z-index: 10;
     top: 0;
     right: 0;
-
-    display: none;
   }
 }
 </style>
