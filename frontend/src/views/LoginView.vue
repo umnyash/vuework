@@ -21,21 +21,19 @@
 
     <form action="#" method="post" class="sign-form__shape">
       <label class="sign-form__input">
-        <input
-          type="email"
+        <app-text-field
           name="email"
-          class="input"
-          required
+          type="email"
           placeholder="E-mail"
+          required
         />
       </label>
       <label class="sign-form__input">
-        <input
-          type="password"
+        <app-text-field
           name="password"
-          class="input"
-          required
+          type="password"
           placeholder="Пароль"
+          required
         />
       </label>
 
@@ -48,6 +46,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import AppTextField from "@/common/components/AppTextField.vue";
 import AppButton from "@/common/components/AppButton.vue";
 
 const router = useRouter();
@@ -55,19 +54,6 @@ const router = useRouter();
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
-
-.input {
-  display: block;
-
-  box-sizing: border-box;
-  width: 100%;
-  margin: 0;
-  padding: 12px 16px;
-
-  color: $gray-900;
-  border: 1px solid $white-800;
-  border-radius: 6px;
-}
 
 .sign-form {
   display: block;
