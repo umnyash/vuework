@@ -43,6 +43,8 @@ export const normalizeTask = (task) => ({
 export const getImage = (image) =>
   new URL(`src/assets/img/${image}`, new URL(import.meta.url).origin).href;
 
+export const getPublicImage = (path) => `/api/${path}`;
+
 export const dropTaskToColumn = ({
   columnId,
   columnTasks,
