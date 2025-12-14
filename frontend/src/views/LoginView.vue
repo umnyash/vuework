@@ -19,9 +19,10 @@
 
     <h3 class="sign-form__title">Войти</h3>
 
-    <form action="#" method="post" class="sign-form__shape">
+    <form class="sign-form__shape" @submit.prevent="handleFormSubmit">
       <label class="sign-form__input">
         <app-text-field
+          v-model="authData.email"
           name="email"
           type="email"
           placeholder="E-mail"
@@ -30,6 +31,7 @@
       </label>
       <label class="sign-form__input">
         <app-text-field
+          v-model="authData.password"
           name="password"
           type="password"
           placeholder="Пароль"
@@ -38,17 +40,55 @@
       </label>
 
       <div class="sign-form__wrap">
-        <app-button type="submit">Войти</app-button>
+        <app-button
+          type="submit"
+          :disabled="isSubmitting"
+          :class="{ 'button--disabled': isSubmitting }"
+        >
+          Войти
+        </app-button>
+      </div>
+      <div v-if="serverErrorMessage" class="sign-form__error-message">
+        {{ serverErrorMessage }}
       </div>
     </form>
   </div>
 </template>
 
 <script setup>
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores";
 import AppTextField from "@/common/components/AppTextField.vue";
 import AppButton from "@/common/components/AppButton.vue";
 
+const authData = reactive({
+  email: "",
+  password: "",
+});
+
+const serverErrorMessage = ref("");
+const isSubmitting = ref(false);
+
+const authStore = useAuthStore();
+
+const handleFormSubmit = async () => {
+  serverErrorMessage.value = "";
+  isSubmitting.value = true;
+
+  const responseMessage = await authStore.login(
+    authData.email,
+    authData.password,
+  );
+
+  if (responseMessage === "ok") {
+    await authStore.getMe();
+    router.push("/");
+  } else {
+    isSubmitting.value = false;
+    serverErrorMessage.value = responseMessage;
+  }
+};
 const router = useRouter();
 </script>
 
@@ -156,6 +196,12 @@ const router = useRouter();
         opacity: 0.6;
       }
     }
+  }
+
+  &__error-message {
+    color: $red-600;
+    margin-top: 16px;
+    @include r-s14-h16;
   }
 }
 </style>
