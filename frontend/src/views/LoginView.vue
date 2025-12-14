@@ -19,7 +19,11 @@
 
     <h3 class="sign-form__title">Войти</h3>
 
-    <form class="sign-form__shape" @submit.prevent="handleFormSubmit">
+    <form
+      class="sign-form__shape"
+      novalidate
+      @submit.prevent="handleFormSubmit"
+    >
       <label class="sign-form__input">
         <app-text-field
           v-model="authData.email"
@@ -27,6 +31,7 @@
           type="email"
           placeholder="E-mail"
           required
+          :error-text="validations.email.error"
         />
       </label>
       <label class="sign-form__input">
@@ -36,6 +41,7 @@
           type="password"
           placeholder="Пароль"
           required
+          :error-text="validations.password.error"
         />
       </label>
 
@@ -56,8 +62,13 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import {
+  ValidationRule,
+  validateFields,
+  clearValidationErrors,
+} from "@/common/validator";
 import { useAuthStore } from "@/stores";
 import AppTextField from "@/common/components/AppTextField.vue";
 import AppButton from "@/common/components/AppButton.vue";
@@ -67,12 +78,35 @@ const authData = reactive({
   password: "",
 });
 
+const validations = reactive({
+  email: {
+    error: "",
+    rules: [ValidationRule.Required, ValidationRule.Email],
+  },
+  password: {
+    error: "",
+    rules: [ValidationRule.Required],
+  },
+});
+
+watch(authData, () => {
+  if (validations.email.error || validations.password.error) {
+    clearValidationErrors(validations);
+  }
+});
+
 const serverErrorMessage = ref("");
 const isSubmitting = ref(false);
 
 const authStore = useAuthStore();
 
 const handleFormSubmit = async () => {
+  const isValid = validateFields(authData, validations);
+
+  if (!isValid) {
+    return;
+  }
+
   serverErrorMessage.value = "";
   isSubmitting.value = true;
 
