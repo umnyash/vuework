@@ -5,7 +5,12 @@
     <!-- Шапка доски -->
     <div class="desk__header">
       <h1 class="desk__title">Design Coffee Lab</h1>
-      <button class="desk__add" type="button" @click="columnsStore.addColumn">
+      <button
+        v-if="authStore.isAdmin"
+        class="desk__add"
+        type="button"
+        @click="columnsStore.addColumn"
+      >
         Добавить столбец
       </button>
       <div class="desk__filters">
@@ -86,9 +91,15 @@
 import { getImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
-import { useUsersStore, useFilterStore, useColumnsStore } from "@/stores";
+import {
+  useAuthStore,
+  useUsersStore,
+  useFilterStore,
+  useColumnsStore,
+} from "@/stores";
 import DeskColumn from "@/modules/columns/components/DeskColumn.vue";
 
+const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const filterStore = useFilterStore();
 const columnsStore = useColumnsStore();

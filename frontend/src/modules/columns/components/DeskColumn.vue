@@ -21,17 +21,19 @@
         @blur="finishTitleEditing"
       />
 
-      <app-icon
-        v-if="!state.isTitleEditing"
-        class="column__button column__update icon--edit"
-        @click="startTitleEditing"
-      />
+      <template v-if="authStore.isAdmin">
+        <app-icon
+          v-if="!state.isTitleEditing"
+          class="column__button column__update icon--edit"
+          @click="startTitleEditing"
+        />
 
-      <app-icon
-        v-if="!state.isTitleEditing && !tasks.length"
-        class="column__button column__delete icon--trash"
-        @click="columnsStore.deleteColumn(column.id)"
-      />
+        <app-icon
+          v-if="!state.isTitleEditing && !tasks.length"
+          class="column__button column__delete icon--trash"
+          @click="columnsStore.deleteColumn(column.id)"
+        />
+      </template>
     </h2>
     <div class="column__target-area">
       <!-- Задачи -->
@@ -54,7 +56,7 @@
 <script setup>
 import { computed, nextTick, reactive, ref } from "vue";
 import { dropTaskToColumn } from "@/common/helpers";
-import { useTasksStore, useColumnsStore } from "@/stores";
+import { useAuthStore, useTasksStore, useColumnsStore } from "@/stores";
 import AppDrop from "@/common/components/AppDrop.vue";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
@@ -66,6 +68,7 @@ const props = defineProps({
   },
 });
 
+const authStore = useAuthStore();
 const tasksStore = useTasksStore();
 const columnsStore = useColumnsStore();
 
