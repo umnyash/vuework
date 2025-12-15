@@ -10,7 +10,7 @@
         >
           <div class="comments__user">
             <img
-              :src="getImage(comment.user.avatar)"
+              :src="getPublicImage(comment.user.avatar)"
               :alt="comment.user.name"
               width="30"
               height="30"
@@ -42,7 +42,7 @@
 
 <script setup>
 import { ref, reactive, watch } from "vue";
-import { getImage } from "@/common/helpers";
+import { getPublicImage } from "@/common/helpers";
 import { useUsersStore } from "@/stores";
 
 import {

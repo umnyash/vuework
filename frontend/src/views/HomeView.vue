@@ -38,7 +38,7 @@
                 "
               >
                 <img
-                  :src="getImage(user.avatar)"
+                  :src="getPublicImage(user.avatar)"
                   width="24"
                   height="24"
                   alt="Аватар юзера"
@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { getImage } from "@/common/helpers";
+import { getPublicImage } from "@/common/helpers";
 import { STATUSES } from "@/common/constants";
 import { TasksFilter } from "@/common/enums";
 import {

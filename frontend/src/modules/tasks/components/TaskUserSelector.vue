@@ -8,7 +8,7 @@
           type="button"
           @click.stop="handlePerformerButtonClick"
         >
-          <img :src="getImage(performer.avatar)" :alt="performer.name" />
+          <img :src="getPublicImage(performer.avatar)" :alt="performer.name" />
           {{ performer.name }}
         </button>
 
@@ -40,7 +40,7 @@
               @click="selectUser(user.id)"
             >
               <img
-                :src="getImage(user.avatar)"
+                :src="getPublicImage(user.avatar)"
                 :alt="user.name"
                 width="30"
                 height="30"
@@ -56,7 +56,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { getImage } from "@/common/helpers";
+import { getPublicImage } from "@/common/helpers";
 import { useUsersStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 
