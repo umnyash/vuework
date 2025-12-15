@@ -15,15 +15,15 @@
 
     <div class="backlog__scroll">
       <div class="backlog__collapse">
-        <div class="backlog__user">
+        <div v-if="authStore.user" class="backlog__user">
           <div class="backlog__account">
             <img
-              src="@/assets/img/user6.jpg"
+              :src="getPublicImage(authStore.user.avatar)"
               alt="Ваш аватар"
               width="32"
               height="32"
             />
-            Игорь Пятин
+            {{ authStore.user.name }}
           </div>
 
           <div class="backlog__counter">
@@ -54,11 +54,13 @@
 
 <script setup>
 import { reactive, computed } from "vue";
-import { useTasksStore } from "@/stores";
+import { getPublicImage } from "@/common/helpers";
+import { useAuthStore, useTasksStore } from "@/stores";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 import { dropTaskToColumn } from "@/common/helpers";
 
+const authStore = useAuthStore();
 const tasksStore = useTasksStore();
 
 const state = reactive({
@@ -204,6 +206,7 @@ const dropConfig = computed(() => ({
     width: 32px;
     height: 32px;
     padding-top: 6px;
+    margin-left: auto;
 
     text-align: center;
 
