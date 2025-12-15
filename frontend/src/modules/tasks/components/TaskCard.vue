@@ -1,6 +1,6 @@
 <template>
   <app-drop @drop="$emit('drop', $event)">
-    <app-drag :transfer-data="task">
+    <app-drag :transfer-data="task" :draggable="authStore.isAuthenticated">
       <div
         class="task"
         :class="{ 'task--backlog': inBacklog }"
@@ -46,6 +46,7 @@ import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskTags from "./TaskTags.vue";
 import { getImage } from "@/common/helpers";
+import { useAuthStore } from "@/stores";
 
 const props = defineProps({
   task: {
@@ -60,6 +61,7 @@ const props = defineProps({
 defineEmits(["drop"]);
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const handleTaskClick = () => {
   router.push({ path: `/${props.task.id}` });
