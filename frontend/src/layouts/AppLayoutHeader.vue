@@ -30,7 +30,11 @@
     </form>
 
     <!-- Кнопка создания новой задачи -->
-    <router-link class="header__create-task" to="/tasks/create">
+    <router-link
+      v-if="authStore.isAdmin"
+      class="header__create-task"
+      to="/tasks/create"
+    >
       Создать карточку
     </router-link>
 

@@ -10,6 +10,9 @@ export const useAuthStore = defineStore("auth", {
     isAuthenticated(state) {
       return Boolean(state.user);
     },
+    isAdmin(state) {
+      return Boolean(state.user?.isAdmin);
+    },
     getUserProperty(state) {
       return (property) => state.user?.[property];
     },

@@ -15,7 +15,11 @@
 
       <h1 class="task-card__name">
         <span>{{ task.title }}</span>
-        <app-icon class="icon--edit" @click="handleEditButtonClick" />
+        <app-icon
+          v-if="authStore.isAdmin"
+          class="icon--edit"
+          @click="handleEditButtonClick"
+        />
       </h1>
 
       <p class="task-card__date">{{ useTaskDate(task) }}</p>
@@ -86,7 +90,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { getImage, formatDate, createSubtask } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
-import { useTasksStore } from "@/stores";
+import { useAuthStore, useTasksStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
@@ -96,6 +100,7 @@ const router = useRouter();
 const route = useRoute();
 const cardElement = ref(null);
 
+const authStore = useAuthStore();
 const tasksStore = useTasksStore();
 
 const task = computed(() =>
