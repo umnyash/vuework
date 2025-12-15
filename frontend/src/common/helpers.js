@@ -1,4 +1,3 @@
-import { uniqueId } from "lodash";
 import {
   SEC,
   MINUTE_IN_SEC,
@@ -8,8 +7,6 @@ import {
   MONTH_IN_SEC,
   YEAR_IN_SEC,
   TAG_SEPARATOR,
-  COLUMN_ID_PREFIX,
-  COLUMN_DEFAULT_TITLE,
   SECOND_iN_SEC,
   SUBTASK_DEFAULT_DESCRIPTION,
   TASK_DEFAULT_TITLE,
@@ -89,11 +86,6 @@ export const dropTaskToColumn = ({
 
   tasksStore.updateTasks(tasksWithNewSortOrder);
 };
-
-export const createNewColumn = () => ({
-  id: uniqueId(COLUMN_ID_PREFIX),
-  title: COLUMN_DEFAULT_TITLE,
-});
 
 const getDeclension = (count, one, few, many) => {
   const countString = String(count);

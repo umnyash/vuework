@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import columnsJSON from "@/mocks/columns.json";
-import { createNewColumn } from "@/common/helpers";
+import { COLUMN_DEFAULT_TITLE } from "@/common/constants";
+import { columnsService } from "@/services";
 
 export const useColumnsStore = defineStore("columns", {
   state: () => ({
@@ -9,16 +9,21 @@ export const useColumnsStore = defineStore("columns", {
   getters: {},
   actions: {
     async fetchColumns() {
-      this.columns = columnsJSON;
+      this.columns = await columnsService.fetchColumns();
     },
-    addColumn() {
-      this.columns.push(createNewColumn());
+    async addColumn() {
+      const newColumn = await columnsService.createColumn({
+        title: COLUMN_DEFAULT_TITLE,
+      });
+      this.columns.push(newColumn);
     },
-    updateColumn(column) {
+    async updateColumn(column) {
+      await columnsService.updateColumn(column);
       const columnIndex = this.columns.findIndex(({ id }) => id === column.id);
       this.columns.splice(columnIndex, 1, column);
     },
-    deleteColumn(id) {
+    async deleteColumn(id) {
+      await columnsService.deleteColumn(id);
       const columnIndex = this.columns.findIndex((column) => column.id === id);
       this.columns.splice(columnIndex, 1);
     },
