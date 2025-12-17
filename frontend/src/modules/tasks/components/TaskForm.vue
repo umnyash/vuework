@@ -178,9 +178,11 @@ watch(task.value, () => {
 });
 
 const setPriorityStatus = (priorityStatus) => {
-  const statusId = Object.entries(PriorityStatus).find(
-    ([, status]) => priorityStatus === status,
-  )[0];
+  const statusId = Number(
+    Object.entries(PriorityStatus).find(
+      ([, status]) => priorityStatus === status,
+    )[0],
+  );
 
   task.value.statusId = statusId;
 };

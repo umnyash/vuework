@@ -6,16 +6,16 @@
         :class="{ 'task--backlog': inBacklog }"
         @click="handleTaskClick"
       >
-        <div v-if="task.user" class="task__user">
+        <div v-if="performer" class="task__user">
           <div class="task__avatar">
             <img
-              :src="getImage(task.user.avatar)"
+              :src="getPublicImage(performer.avatar)"
               width="20"
               height="20"
-              :alt="task.user.name"
+              :alt="performer.name"
             />
           </div>
-          {{ task.user.name }}
+          {{ performer.name }}
         </div>
 
         <div class="task__statuses">
@@ -41,12 +41,13 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskTags from "./TaskTags.vue";
-import { getImage } from "@/common/helpers";
-import { useAuthStore } from "@/stores";
+import { getPublicImage } from "@/common/helpers";
+import { useAuthStore, useUsersStore } from "@/stores";
 
 const props = defineProps({
   task: {
@@ -62,6 +63,9 @@ defineEmits(["drop"]);
 
 const router = useRouter();
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
+
+const performer = computed(() => usersStore.getUserById(props.task.userId));
 
 const handleTaskClick = () => {
   router.push({ path: `/${props.task.id}` });

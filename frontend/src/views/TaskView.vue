@@ -25,12 +25,15 @@
       <p class="task-card__date">{{ useTaskDate(task) }}</p>
 
       <ul class="task-card__params">
-        <li v-if="task.user">
+        <li v-if="performer">
           Участник:
           <div class="task-card__participant">
             <button type="button" class="task-card__user">
-              <img :src="getImage(task.user.avatar)" :alt="task.user.name" />
-              {{ task.user.name }}
+              <img
+                :src="getPublicImage(performer.avatar)"
+                :alt="performer.name"
+              />
+              {{ performer.name }}
             </button>
           </div>
         </li>
@@ -88,9 +91,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { getImage, formatDate, createSubtask } from "@/common/helpers";
+import { getPublicImage, formatDate, createSubtask } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
-import { useAuthStore, useTasksStore } from "@/stores";
+import { useAuthStore, useUsersStore, useTasksStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
@@ -101,11 +104,14 @@ const route = useRoute();
 const cardElement = ref(null);
 
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
 const tasksStore = useTasksStore();
 
 const task = computed(() =>
   tasksStore.tasks.find((task) => String(task.id) === route.params.id),
 );
+
+const performer = usersStore.getUserById(task.value.userId);
 
 const closeCard = () => {
   router.push("/");

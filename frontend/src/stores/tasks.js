@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import tasksJSON from "@/mocks/tasks.json";
-import { TasksFilter } from "@/common/enums";
-import { normalizeTask } from "@/common/helpers";
-import { useUsersStore } from "./users";
+import { PriorityStatus, TasksFilter } from "@/common/enums";
+import { determineTimeStatus } from "@/common/helpers";
+import { tasksService } from "@/services";
 import { useFilterStore } from "./filter";
 
 export const useTasksStore = defineStore("tasks", {
@@ -68,40 +67,44 @@ export const useTasksStore = defineStore("tasks", {
     },
   },
   actions: {
-    async fetchTasks() {
-      this.tasks = tasksJSON.map(normalizeTask);
+    adaptTaskToClient(task) {
+      return {
+        ...task,
+        priority: PriorityStatus[task.statusId] ?? "",
+        timeStatus: determineTimeStatus(task.dueDate),
+      };
     },
-    updateTasks(updatedTasks) {
-      updatedTasks.forEach((task) => {
+    adaptTaskToServer(task) {
+      delete task.priority;
+      delete task.timeStatus;
+      delete task.user;
+      delete task.subtasks;
+      delete task.comments;
+
+      return task;
+    },
+    async fetchTasks() {
+      const tasks = await tasksService.fetchTasks();
+      this.tasks = tasks.map(this.adaptTaskToClient);
+    },
+    async updateTasks(updatedTasks) {
+      updatedTasks.forEach(async (task) => {
+        await tasksService.updateTask(this.adaptTaskToServer(task));
         const taskIndex = this.tasks.findIndex(({ id }) => id === task.id);
-
-        const normalizedTask = normalizeTask(task);
-
-        if (task.userId) {
-          const usersStore = useUsersStore();
-          normalizedTask.user = { ...usersStore.getUserById(task.userId) };
-        }
-
-        this.tasks.splice(taskIndex, 1, normalizedTask);
+        this.tasks.splice(taskIndex, 1, task);
       });
     },
-    addTask(task) {
-      const normalizedTask = normalizeTask(task);
+    async addTask(taskData) {
+      taskData.sortOrder = this.tasks.filter((task) => !task.columnId).length;
 
-      if (task.userId) {
-        const usersStore = useUsersStore();
-        normalizedTask.user = { ...usersStore.getUserById(task.userId) };
-      }
+      const task = await tasksService.createTask(
+        this.adaptTaskToServer(taskData),
+      );
 
-      normalizedTask.id = this.tasks.length + 1;
-      normalizedTask.createdAt = new Date().toISOString();
-      normalizedTask.sortOrder = this.tasks.filter(
-        (task) => !task.columnId,
-      ).length;
-
-      this.tasks.push(normalizedTask);
+      this.tasks.push(this.adaptTaskToClient(task));
     },
-    deleteTask(id) {
+    async deleteTask(id) {
+      await tasksService.deleteTask(id);
       const taskIndex = this.tasks.findIndex((task) => task.id === id);
       this.tasks.splice(taskIndex, 1);
     },

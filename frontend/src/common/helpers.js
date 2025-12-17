@@ -11,11 +11,11 @@ import {
   SUBTASK_DEFAULT_DESCRIPTION,
   TASK_DEFAULT_TITLE,
 } from "./constants";
-import { PriorityStatus, TimeStatus, KeyCode } from "./enums";
+import { TimeStatus, KeyCode } from "./enums";
 
 export const parseTags = (tags) => tags.split(TAG_SEPARATOR).slice(1);
 
-const determineTimeStatus = (dueDate) => {
+export const determineTimeStatus = (dueDate) => {
   if (!dueDate) {
     return "";
   }
@@ -30,12 +30,6 @@ const determineTimeStatus = (dueDate) => {
 
   return timeDelta > 0 ? TimeStatus.DEADLINE : TimeStatus.EXPIRED;
 };
-
-export const normalizeTask = (task) => ({
-  ...task,
-  priority: PriorityStatus[task.statusId] ?? "",
-  timeStatus: determineTimeStatus(task.dueDate),
-});
 
 export const getImage = (image) =>
   new URL(`src/assets/img/${image}`, new URL(import.meta.url).origin).href;
@@ -152,12 +146,11 @@ export const createTask = () => ({
   sortOrder: 0,
   dueDate: null,
   tags: "",
-  columnId: "",
-  statusId: "",
+  columnId: null,
+  statusId: null,
   userId: null,
   url: "",
   urlDescription: "",
-  subtasks: [],
 });
 
 export const isEnterEvent = (evt) => evt.code === KeyCode.ENTER;
