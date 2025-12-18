@@ -41,9 +41,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { getPublicImage } from "@/common/helpers";
-import { useUsersStore } from "@/stores";
+import { useAuthStore, useUsersStore, useCommentsStore } from "@/stores";
 
 import {
   ValidationRule,
@@ -58,17 +58,20 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  comments: {
-    type: Array,
-    default: () => [],
-  },
 });
 
-const emit = defineEmits(["submitComment"]);
-
+const authStore = useAuthStore();
 const usersStore = useUsersStore();
-const user = usersStore.users[0];
+const commentsStore = useCommentsStore();
+
 const newComment = ref("");
+
+const comments = computed(() =>
+  (commentsStore.commentsGroupedByTask[props.taskId] ?? []).map((comment) => ({
+    ...comment,
+    user: usersStore.getUserById(comment.userId),
+  })),
+);
 
 const validations = reactive({
   newComment: {
@@ -83,7 +86,7 @@ watch(newComment, () => {
   }
 });
 
-const handleFormSubmit = () => {
+const handleFormSubmit = async () => {
   const isValid = validateFields({ newComment }, validations);
 
   if (!isValid) {
@@ -92,16 +95,11 @@ const handleFormSubmit = () => {
 
   const comment = {
     taskId: props.taskId,
-    userId: user.id,
-    user: {
-      id: user.id,
-      name: user.name,
-      avatar: user.avatar,
-    },
+    userId: authStore.user.id,
     text: newComment.value,
   };
 
-  emit("submitComment", comment);
+  await commentsStore.addComment(comment);
   newComment.value = "";
 };
 </script>

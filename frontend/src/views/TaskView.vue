@@ -79,11 +79,7 @@
         <task-tags v-if="task.tags.length" :tags="task.tags" />
       </div>
 
-      <task-comments
-        :task-id="task.id"
-        :comments="task.comments"
-        @submit-comment="handleCommentSubmit"
-      />
+      <task-comments :task-id="task.id" />
     </section>
   </div>
 </template>
@@ -158,14 +154,6 @@ const handleRemoveSubtaskButtonClick = (subtaskId) => {
   );
 
   task.value.subtasks.splice(subtaskIndex, 1);
-};
-
-const handleCommentSubmit = (comment) => {
-  if (!task.value.comments) {
-    task.value.comments = [];
-  }
-
-  task.value.comments.push(comment);
 };
 
 onMounted(() => {

@@ -5,16 +5,23 @@
 </template>
 
 <script setup>
-import { useUsersStore, useTasksStore, useColumnsStore } from "@/stores";
+import {
+  useUsersStore,
+  useTasksStore,
+  useColumnsStore,
+  useCommentsStore,
+} from "@/stores";
 import { AppLayout } from "@/layouts";
 
 const usersStore = useUsersStore();
 const tasksStore = useTasksStore();
 const columnsStore = useColumnsStore();
+const commentsStore = useCommentsStore();
 
 usersStore.fetchUsers();
 tasksStore.fetchTasks();
 columnsStore.fetchColumns();
+commentsStore.fetchComments();
 </script>
 
 <style lang="scss">
