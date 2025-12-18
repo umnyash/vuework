@@ -6,6 +6,7 @@
           type="checkbox"
           name="remember"
           :checked="subtask.isDone"
+          :disabled="disabled"
           @change="
             emit('change', { ...subtask, isDone: $event.target.checked })
           "
@@ -26,7 +27,7 @@
       </label>
     </div>
 
-    <div class="task-card__icons">
+    <div v-if="authStore.isAdmin" class="task-card__icons">
       <app-icon
         class="icon--edit"
         :style="editButtonStyleObject"
@@ -43,6 +44,7 @@
 <script setup>
 import { reactive, ref, nextTick, computed } from "vue";
 import { SUBTASK_DESCRIPTION_MAX_LENGTH } from "@/common/constants";
+import { useAuthStore } from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 
 const props = defineProps({
@@ -50,9 +52,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["change", "removeButtonClick"]);
+
+const authStore = useAuthStore();
 
 const descriptionFieldElementRef = ref(null);
 

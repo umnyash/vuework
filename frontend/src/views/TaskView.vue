@@ -69,6 +69,7 @@
 
       <task-checklist
         :subtasks="task.subtasks"
+        :disabled="isChecklistDisabled"
         @subtask-change="handleSubtaskChange"
         @add-subtask-button-click="handleAddSubtaskButtonClick"
         @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
@@ -108,6 +109,8 @@ const task = computed(() =>
 );
 
 const performer = usersStore.getUserById(task.value.userId);
+const isChecklistDisabled =
+  !authStore.isAdmin && authStore.user?.id !== performer?.id;
 
 const closeCard = () => {
   router.push("/");

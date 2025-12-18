@@ -3,6 +3,7 @@
     <h2 class="task-card__title">
       Чеклист
       <button
+        v-if="authStore.isAdmin"
         type="button"
         class="task-card__plus"
         @click="emit('addSubtaskButtonClick')"
@@ -14,6 +15,7 @@
         v-for="subtask of subtasks"
         :key="subtask.id"
         :subtask="subtask"
+        :disabled="disabled"
         @change="emit('subtaskChange', $event)"
         @remove-button-click="emit('removeSubtaskButtonClick', $event)"
       />
@@ -22,12 +24,17 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "@/stores";
 import TaskChecklistItem from "./TaskChecklistItem.vue";
 
 defineProps({
   subtasks: {
     type: Array,
     default: () => [],
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -36,6 +43,8 @@ const emit = defineEmits([
   "addSubtaskButtonClick",
   "removeSubtaskButtonClick",
 ]);
+
+const authStore = useAuthStore();
 </script>
 
 <style lang="scss" scoped>
