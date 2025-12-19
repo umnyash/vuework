@@ -99,7 +99,7 @@
       </div>
 
       <task-checklist
-        :subtasks="task.subtasks"
+        :subtasks="subtasks"
         @subtask-change="handleSubtaskChange"
         @add-subtask-button-click="handleAddSubtaskButtonClick"
         @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
@@ -138,7 +138,7 @@ import {
   validateFields,
   clearValidationErrors,
 } from "@/common/validator";
-import { useTasksStore } from "@/stores";
+import { useTasksStore, useSubtasksStore } from "@/stores";
 import AppTextArea from "@/common/components/AppTextArea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import TaskUserSelector from "@/modules/tasks/components/TaskUserSelector.vue";
@@ -155,10 +155,15 @@ const props = defineProps({
 
 const router = useRouter();
 const formElement = ref(null);
-const task = ref(props.task ? cloneDeep(props.task) : createTask());
 const priorityStatuses = STATUSES.slice(0, 3);
 
 const tasksStore = useTasksStore();
+const subtasksStore = useSubtasksStore();
+
+const task = ref(props.task ? cloneDeep(props.task) : createTask());
+const initialSubtasks =
+  subtasksStore.subtasksGroupedByTask[task.value.id] ?? [];
+const subtasks = ref(cloneDeep(initialSubtasks));
 
 const validations = reactive({
   title: {
@@ -213,32 +218,65 @@ const handleRemoveButtonClick = () => {
 };
 
 const handleSubtaskChange = (subtask) => {
-  const subtaskIndex = task.value.subtasks.findIndex(
-    ({ id }) => id === subtask.id,
-  );
-
-  task.value.subtasks.splice(subtaskIndex, 1, subtask);
+  const subtaskIndex = subtasks.value.findIndex(({ id }) => id === subtask.id);
+  subtasks.value.splice(subtaskIndex, 1, subtask);
 };
 
 const handleAddSubtaskButtonClick = () => {
-  const newSubtask = createSubtask();
-
-  if (!task.value.subtasks) {
-    task.value.subtasks = [newSubtask];
-  } else {
-    task.value.subtasks.push(newSubtask);
-  }
+  subtasks.value.push(createSubtask());
 };
 
 const handleRemoveSubtaskButtonClick = (subtaskId) => {
-  const subtaskIndex = task.value.subtasks.findIndex(
-    ({ id }) => id === subtaskId,
-  );
-
-  task.value.subtasks.splice(subtaskIndex, 1);
+  const subtaskIndex = subtasks.value.findIndex(({ id }) => id === subtaskId);
+  subtasks.value.splice(subtaskIndex, 1);
 };
 
-const handleFormSubmit = () => {
+const submitSubtasks = async (taskId) => {
+  let promises = [];
+
+  if (!props.task) {
+    promises = subtasks.value.map((subtask) => {
+      if (!subtask.text) {
+        return;
+      }
+
+      subtask.taskId = taskId;
+
+      return subtasksStore.addSubtask(subtask);
+    });
+  } else {
+    initialSubtasks.forEach((initialSubtask) => {
+      const subtask = subtasks.value.find(
+        (subtask) => subtask.id === initialSubtask.id,
+      );
+
+      if (!subtask) {
+        promises.push(subtasksStore.deleteSubtask(initialSubtask.id));
+      } else {
+        const isChanged =
+          JSON.stringify(initialSubtask) !== JSON.stringify(subtask);
+
+        if (isChanged) {
+          promises.push(subtasksStore.updateSubtask(subtask));
+        }
+      }
+    });
+
+    subtasks.value.forEach((subtask) => {
+      const isNew =
+        initialSubtasks.findIndex(({ id }) => subtask.id === id) === -1;
+
+      if (isNew) {
+        subtask.taskId = taskId;
+        promises.push(subtasksStore.addSubtask(subtask));
+      }
+    });
+  }
+
+  await Promise.all(promises);
+};
+
+const handleFormSubmit = async () => {
   const isValid = validateFields(task.value, validations);
 
   if (!isValid) {
@@ -246,9 +284,11 @@ const handleFormSubmit = () => {
   }
 
   if (task.value.id) {
-    tasksStore.updateTasks([task.value]);
+    await tasksStore.updateTasks([task.value]);
+    await submitSubtasks(task.value.id);
   } else {
-    tasksStore.addTask(task.value);
+    const newTask = await tasksStore.addTask(task.value);
+    await submitSubtasks(newTask.id);
   }
 
   closeForm();

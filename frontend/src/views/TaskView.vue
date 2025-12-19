@@ -68,11 +68,13 @@
       </div>
 
       <task-checklist
-        :subtasks="task.subtasks"
+        :subtasks="subtasks"
         :disabled="isChecklistDisabled"
-        @subtask-change="handleSubtaskChange"
-        @add-subtask-button-click="handleAddSubtaskButtonClick"
-        @remove-subtask-button-click="handleRemoveSubtaskButtonClick"
+        @subtask-change="subtasksStore.updateSubtask"
+        @add-subtask-button-click="
+          subtasksStore.addSubtask(createSubtask(task.id))
+        "
+        @remove-subtask-button-click="subtasksStore.deleteSubtask"
       />
 
       <div class="task-card__tags">
@@ -90,7 +92,12 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { getPublicImage, formatDate, createSubtask } from "@/common/helpers";
 import { useTaskDate } from "@/common/composables";
-import { useAuthStore, useUsersStore, useTasksStore } from "@/stores";
+import {
+  useAuthStore,
+  useUsersStore,
+  useTasksStore,
+  useSubtasksStore,
+} from "@/stores";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskChecklist from "@/modules/tasks/components/TaskChecklist.vue";
 import TaskTags from "@/modules/tasks/components/TaskTags.vue";
@@ -103,9 +110,14 @@ const cardElement = ref(null);
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const tasksStore = useTasksStore();
+const subtasksStore = useSubtasksStore();
 
 const task = computed(() =>
   tasksStore.tasks.find((task) => String(task.id) === route.params.id),
+);
+
+const subtasks = computed(
+  () => subtasksStore.subtasksGroupedByTask[task.value.id] ?? [],
 );
 
 const performer = usersStore.getUserById(task.value.userId);
@@ -133,30 +145,6 @@ const handleEditButtonClick = () => {
     name: "TaskEditView",
     params: { id: route.params.id },
   });
-};
-
-const handleSubtaskChange = (subtask) => {
-  const subtaskIndex = task.value.subtasks.findIndex(
-    ({ id }) => id === subtask.id,
-  );
-
-  task.value.subtasks.splice(subtaskIndex, 1, subtask);
-};
-
-const handleAddSubtaskButtonClick = () => {
-  if (!task.value.subtasks) {
-    task.value.subtasks = [];
-  }
-
-  task.value.subtasks.push(createSubtask());
-};
-
-const handleRemoveSubtaskButtonClick = (subtaskId) => {
-  const subtaskIndex = task.value.subtasks.findIndex(
-    ({ id }) => id === subtaskId,
-  );
-
-  task.value.subtasks.splice(subtaskIndex, 1);
 };
 
 onMounted(() => {

@@ -101,7 +101,9 @@ export const useTasksStore = defineStore("tasks", {
         this.adaptTaskToServer(taskData),
       );
 
-      this.tasks.push(this.adaptTaskToClient(task));
+      const adaptedTask = this.adaptTaskToClient(task);
+      this.tasks.push(adaptedTask);
+      return adaptedTask;
     },
     async deleteTask(id) {
       await tasksService.deleteTask(id);

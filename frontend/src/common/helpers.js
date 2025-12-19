@@ -134,8 +134,9 @@ export const formatDate = (dateString) =>
     })
     .replace(",", "");
 
-export const createSubtask = () => ({
+export const createSubtask = (taskId) => ({
   id: crypto.randomUUID(),
+  taskId,
   text: SUBTASK_DEFAULT_DESCRIPTION,
   isDone: false,
 });
