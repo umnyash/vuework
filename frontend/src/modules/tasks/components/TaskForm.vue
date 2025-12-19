@@ -284,7 +284,13 @@ const handleFormSubmit = async () => {
   }
 
   if (task.value.id) {
-    await tasksStore.updateTasks([task.value]);
+    const isTaskChanged =
+      JSON.stringify(props.task) !== JSON.stringify(task.value);
+
+    if (isTaskChanged) {
+      await tasksStore.updateTasks([task.value]);
+    }
+
     await submitSubtasks(task.value.id);
   } else {
     const newTask = await tasksStore.addTask(task.value);
