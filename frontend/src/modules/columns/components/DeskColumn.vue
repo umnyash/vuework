@@ -36,19 +36,21 @@
       </template>
     </h2>
     <div class="column__target-area">
-      <!-- Задачи -->
-      <div v-for="task in tasks" :key="task.id" class="column__task">
-        <task-card
-          :task="task"
-          @drop="
-            dropTaskToColumn({
-              hoveredTask: task,
-              droppedTask: $event,
-              ...dropConfig,
-            })
-          "
-        />
-      </div>
+      <transition-group name="tasks">
+        <!-- Задачи -->
+        <div v-for="task in tasks" :key="task.id" class="column__task">
+          <task-card
+            :task="task"
+            @drop="
+              dropTaskToColumn({
+                hoveredTask: task,
+                droppedTask: $event,
+                ...dropConfig,
+              })
+            "
+          />
+        </div>
+      </transition-group>
     </div>
   </app-drop>
 </template>
@@ -191,5 +193,16 @@ const dropConfig = computed(() => ({
     margin-right: 5px;
     margin-left: 5px;
   }
+}
+
+.tasks-enter-active,
+.tasks-leave-active {
+  transition: all $animationSpeed ease;
+}
+
+.tasks-enter-from,
+.tasks-leave-to {
+  transform: scale(1.1);
+  opacity: 0;
 }
 </style>

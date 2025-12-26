@@ -32,20 +32,22 @@
         </div>
 
         <div class="backlog__target-area">
-          <task-card
-            v-for="task in tasksStore.backlogTasks"
-            :key="task.id"
-            class="backlog__task"
-            :task="task"
-            in-backlog
-            @drop="
-              dropTaskToColumn({
-                hoveredTask: task,
-                droppedTask: $event,
-                ...dropConfig,
-              })
-            "
-          />
+          <transition-group name="tasks">
+            <task-card
+              v-for="task in tasksStore.backlogTasks"
+              :key="task.id"
+              class="backlog__task"
+              :task="task"
+              in-backlog
+              @drop="
+                dropTaskToColumn({
+                  hoveredTask: task,
+                  droppedTask: $event,
+                  ...dropConfig,
+                })
+              "
+            />
+          </transition-group>
         </div>
       </div>
     </div>
@@ -241,5 +243,16 @@ const dropConfig = computed(() => ({
     margin-bottom: 11px;
     margin-left: 12px;
   }
+}
+
+.tasks-enter-active,
+.tasks-leave-active {
+  transition: all $animationSpeed ease;
+}
+
+.tasks-enter-from,
+.tasks-leave-to {
+  transform: scale(1.1);
+  opacity: 0;
 }
 </style>
