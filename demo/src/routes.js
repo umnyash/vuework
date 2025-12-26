@@ -19,4 +19,31 @@ export default [
     path: "/server",
     component: () => import("./demo5/DemoServer.vue"),
   },
+  {
+    name: "Bouncing Ball",
+    path: "/bouncing-ball",
+    component: () => import("./demo6/BouncingBall.vue"),
+  },
+  {
+    name: "Bouncing Ball JavaScript",
+    path: "/bouncing-ball-js",
+    component: () => import("./demo6/BouncingBallJavaScript.vue"),
+  },
+  {
+    name: "Animated Routes",
+    path: "/animated-routes",
+    component: () => import("./demo6/AnimatedRoutes.vue"),
+    children: [
+      {
+        path: "/animated-routes/component-a",
+        name: "componentA",
+        component: () => import("./demo6/ComponentA.vue"),
+      },
+      {
+        path: "/animated-routes/component-b",
+        name: "componentB",
+        component: () => import("./demo6/ComponentB.vue"),
+      },
+    ],
+  },
 ];
