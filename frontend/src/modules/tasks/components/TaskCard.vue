@@ -31,7 +31,11 @@
           />
         </div>
 
-        <h5 class="task__title" :class="{ 'task__title--first': !task.user }">
+        <h5
+          class="task__title"
+          :class="{ 'task__title--first': !task.user }"
+          data-test="task-title"
+        >
           {{ task.title }}
         </h5>
         <task-tags v-if="task.tags.length" :tags="task.tags" />

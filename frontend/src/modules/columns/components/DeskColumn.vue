@@ -9,7 +9,9 @@
     "
   >
     <h2 class="column__name">
-      <span v-if="!state.isTitleEditing">{{ state.title }}</span>
+      <span v-if="!state.isTitleEditing" data-test="desk-column-title">
+        {{ state.title }}
+      </span>
 
       <input
         v-else
@@ -35,7 +37,7 @@
         />
       </template>
     </h2>
-    <div class="column__target-area">
+    <div class="column__target-area" data-test="column-target-area">
       <transition-group name="tasks">
         <!-- Задачи -->
         <div v-for="task in tasks" :key="task.id" class="column__task">
